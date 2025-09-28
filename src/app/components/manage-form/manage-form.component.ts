@@ -6,8 +6,6 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './manage-form.component.html',
-  styleUrls: ['./manage-form.component.scss']
+  styleUrls: ['./manage-form.component.scss'],
 })
-export class ManageFormComponent {
-  
-}
+export class ManageFormComponent {}

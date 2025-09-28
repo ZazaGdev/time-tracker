@@ -5,6 +5,6 @@ import { ManageFormComponent } from '../../components/manage-form/manage-form.co
   selector: 'app-manage',
   standalone: true,
   imports: [ManageFormComponent],
-  template: '<app-manage-form></app-manage-form>'
+  template: '<app-manage-form></app-manage-form>',
 })
-export class ManageComponent { }
+export class ManageComponent {}

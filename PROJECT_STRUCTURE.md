@@ -51,22 +51,26 @@ src/app/
 ## Key Principles
 
 ### 1. Component Organization
+
 - All component-related files (TS, HTML, SCSS) are grouped in single directories
 - Components are organized by feature/responsibility
 - Each component directory contains all its assets
 
 ### 2. Core Module Structure
+
 - **models/**: TypeScript interfaces and data models
 - **services/**: Injectable services for business logic
 - **data/**: Database and data access layer
 - Barrel exports (index.ts) for clean imports
 
 ### 3. Page Components
+
 - Page components are route targets
 - They compose UI from reusable components
 - Minimal logic, mainly orchestration
 
 ### 4. Import Strategy
+
 ```typescript
 // Good: Use barrel exports
 import { TimerService, TaxonomyService } from '../../core/services';
@@ -87,6 +91,7 @@ import { TimerService } from '../../core/services/timer.service';
 ## Usage Examples
 
 ### Adding a New Component
+
 ```bash
 # Create component directory
 mkdir src/app/components/new-feature
@@ -98,6 +103,7 @@ touch src/app/components/new-feature/new-feature.component.scss
 ```
 
 ### Adding a New Service
+
 ```typescript
 // Create service in core/services/
 // Export in core/services/index.ts

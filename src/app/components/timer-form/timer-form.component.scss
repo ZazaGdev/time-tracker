@@ -17,7 +17,7 @@
   border-radius: 8px;
   margin-bottom: 24px;
   border-left: 4px solid #4caf50;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .active-timer-status h2 {
@@ -34,7 +34,7 @@
   background-color: white;
   padding: 24px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .timer-controls mat-form-field {
@@ -68,26 +68,26 @@
     .mat-mdc-text-field-wrapper {
       background-color: white !important;
     }
-    
+
     .mat-mdc-form-field-flex {
       background-color: white !important;
     }
   }
-  
+
   .mat-mdc-select-panel {
     background-color: white !important;
     border: 1px solid #e0e0e0 !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
   }
-  
+
   .mat-mdc-option {
     background-color: white !important;
     color: #333 !important;
-    
+
     &:hover {
       background-color: #f5f5f5 !important;
     }
-    
+
     &.mdc-list-item--selected {
       background-color: #e3f2fd !important;
     }
@@ -98,15 +98,15 @@
   .timer-page {
     padding: 12px;
   }
-  
+
   .timer-controls {
     padding: 16px;
   }
-  
+
   .timer-buttons {
     flex-direction: column;
   }
-  
+
   .timer-buttons button {
     width: 100%;
   }
