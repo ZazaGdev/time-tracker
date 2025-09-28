@@ -1,0 +1,33 @@
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.active-link {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border-radius: 4px;
+  color: white !important;
+}
+
+.main-content {
+  background-color: #fafafa;
+  min-height: calc(100vh - 64px); /* Account for toolbar height */
+}
+
+// Ensure toolbar styling
+mat-toolbar {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  
+  nav {
+    display: flex;
+    gap: 8px;
+  }
+  
+  a[mat-button] {
+    color: white;
+    font-weight: 500;
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}

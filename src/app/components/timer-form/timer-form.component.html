@@ -1,0 +1,61 @@
+<div class="timer-page">
+  <h1>Timer</h1>
+
+  <!-- Active Timer Status -->
+  @if (timerService.active(); as activeTimer) {
+  <div class="active-timer-status">
+    <h2>Running since {{ activeTimer.startedAt | date : 'shortTime' }}</h2>
+  </div>
+  }
+
+  <!-- Timer Controls -->
+  <div class="timer-controls">
+    <!-- Category Selection -->
+    <mat-form-field appearance="outline">
+      <mat-label>Category</mat-label>
+      <mat-select [(value)]="categoryId" (selectionChange)="onCategoryChange()">
+        @for (category of categories(); track category.id) {
+        <mat-option [value]="category.id">
+          {{ category.name }}
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Subcategory Selection -->
+    <mat-form-field appearance="outline">
+      <mat-label>Subcategory</mat-label>
+      <mat-select [(value)]="subcategoryId" [disabled]="!categoryId">
+        <mat-option [value]="null">(none)</mat-option>
+        @for (subcategory of subcategories(); track subcategory.id) {
+        <mat-option [value]="subcategory.id">
+          {{ subcategory.name }}
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Tags Selection -->
+    <mat-form-field appearance="outline">
+      <mat-label>Tags</mat-label>
+      <mat-select [(value)]="selectedTagIds" multiple>
+        @for (tag of tags(); track tag.id) {
+        <mat-option [value]="tag.id">
+          {{ tag.name }}
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Action Buttons -->
+    <div class="timer-buttons">
+      <button mat-raised-button color="primary" (click)="startTimer()" [disabled]="!canStart">
+        Start
+      </button>
+
+      <button mat-raised-button color="warn" (click)="stopTimer()" [disabled]="!canStop">
+        Stop
+      </button>
+    </div>
+  </div>
+</div>

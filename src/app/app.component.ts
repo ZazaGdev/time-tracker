@@ -8,8 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, MatToolbarModule, MatButtonModule],
   templateUrl: './app.html',
-  styleUrl: './app.scss',
+  styleUrls: ['./app.scss'],
 })
-export class App {
+export class AppComponent {
   protected readonly title = signal('time-tracker');
 }
