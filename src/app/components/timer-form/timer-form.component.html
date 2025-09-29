@@ -12,14 +12,20 @@
   <div class="timer-controls">
     <!-- Category Selection -->
     <mat-form-field appearance="outline">
-      <mat-label>Category</mat-label>
-      <mat-select [(value)]="categoryId" (selectionChange)="onCategoryChange()">
+      <mat-label>Category *</mat-label>
+      <mat-select
+        [(value)]="categoryId"
+        (selectionChange)="onCategoryChange()"
+        required
+        placeholder="Select a category..."
+      >
         @for (category of categories(); track category.id) {
         <mat-option [value]="category.id">
           {{ category.name }}
         </mat-option>
         }
       </mat-select>
+      <mat-hint>Category selection is required to start timing</mat-hint>
     </mat-form-field>
 
     <!-- Subcategory Selection -->
@@ -49,13 +55,30 @@
 
     <!-- Action Buttons -->
     <div class="timer-buttons">
-      <button mat-raised-button color="primary" (click)="startTimer()" [disabled]="!canStart">
-        Start
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="startTimer()"
+        [disabled]="!canStart"
+        [title]="!categoryId ? 'Please select a category first' : ''"
+      >
+        {{ startButtonText }}
       </button>
 
-      <button mat-raised-button color="warn" (click)="stopTimer()" [disabled]="!canStop">
-        Stop
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="stopTimer()"
+        [disabled]="!canStop"
+        title="Stop the current timer and save session"
+      >
+        Stop Timer
       </button>
+    </div>
+
+    <!-- Validation Message -->
+    <div class="validation-message" *ngIf="!categoryId && categories().length > 0">
+      <p>⚠️ Please select a category to start tracking time</p>
     </div>
   </div>
 </div>

@@ -1,6 +1,78 @@
 <div class="manage-page">
   <h1>Manage Categories, Subcategories & Tags</h1>
 
+  <!-- Export/Import Section -->
+  <mat-card class="export-import-card">
+    <mat-card-header>
+      <mat-card-title>Data Export & Import</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="export-import-actions">
+        <!-- Export Button -->
+        <div class="export-section">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="exportData()"
+            [disabled]="isExporting()"
+          >
+            <mat-icon *ngIf="!isExporting()">download</mat-icon>
+            <mat-spinner *ngIf="isExporting()" diameter="20"></mat-spinner>
+            {{ isExporting() ? 'Exporting...' : 'Export Data' }}
+          </button>
+          <p class="action-description">Download all your data as a JSON backup file</p>
+        </div>
+
+        <mat-divider vertical></mat-divider>
+
+        <!-- Import Section -->
+        <div class="import-section">
+          <button
+            mat-raised-button
+            color="accent"
+            (click)="triggerFileInput()"
+            [disabled]="isImporting()"
+          >
+            <mat-icon *ngIf="!isImporting()">upload</mat-icon>
+            <mat-spinner *ngIf="isImporting()" diameter="20"></mat-spinner>
+            {{ isImporting() ? 'Importing...' : 'Import Data' }}
+          </button>
+          <p class="action-description">
+            Restore data from a backup file (replaces all existing data)
+          </p>
+
+          <!-- Hidden file input -->
+          <input
+            #fileInput
+            type="file"
+            accept=".json"
+            (change)="importData($event)"
+            style="display: none"
+          />
+        </div>
+
+        <mat-divider vertical></mat-divider>
+
+        <!-- Demo Data Seeding Section -->
+        <div class="demo-section">
+          <button
+            mat-raised-button
+            color="warn"
+            (click)="seedDemoData()"
+            [disabled]="isSeedingDemo()"
+          >
+            <mat-icon *ngIf="!isSeedingDemo()">science</mat-icon>
+            <mat-spinner *ngIf="isSeedingDemo()" diameter="20"></mat-spinner>
+            {{ isSeedingDemo() ? 'Seeding...' : 'Seed Demo Data' }}
+          </button>
+          <p class="action-description">
+            <strong>[DEV]</strong> Add sample data for testing (clears existing data)
+          </p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
   <div class="manage-sections">
     <!-- Categories Section -->
     <mat-card class="section-card">

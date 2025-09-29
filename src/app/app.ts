@@ -24,7 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class App {
   title = signal('Trackie');
-  sidenavOpened = signal(false);
+  sidenavOpened = signal(true);
 
   toggleSidenav(): void {
     this.sidenavOpened.set(!this.sidenavOpened());

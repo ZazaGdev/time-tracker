@@ -16,28 +16,17 @@
         routerLink="/"
         routerLinkActive="active-nav-item"
         [routerLinkActiveOptions]="{ exact: true }"
-        (click)="sidenavOpened.set(false)"
       >
         <mat-icon matListItemIcon>timer</mat-icon>
         <span matListItemTitle>Home</span>
       </a>
 
-      <a
-        mat-list-item
-        routerLink="/manage"
-        routerLinkActive="active-nav-item"
-        (click)="sidenavOpened.set(false)"
-      >
+      <a mat-list-item routerLink="/manage" routerLinkActive="active-nav-item">
         <mat-icon matListItemIcon>settings</mat-icon>
         <span matListItemTitle>Manage</span>
       </a>
 
-      <a
-        mat-list-item
-        routerLink="/reports"
-        routerLinkActive="active-nav-item"
-        (click)="sidenavOpened.set(false)"
-      >
+      <a mat-list-item routerLink="/reports" routerLinkActive="active-nav-item">
         <mat-icon matListItemIcon>assessment</mat-icon>
         <span matListItemTitle>Reports</span>
       </a>

@@ -19,6 +19,72 @@
   gap: 24px;
 }
 
+.export-import-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+
+  mat-card-header {
+    background-color: #e8f5e8;
+    margin: -16px -16px 16px -16px;
+    padding: 16px;
+    border-radius: 8px 8px 0 0;
+
+    mat-card-title {
+      color: #2e7d32;
+      font-size: 18px;
+      font-weight: 500;
+      margin: 0;
+    }
+  }
+}
+
+.export-import-actions {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 16px;
+
+  .export-section,
+  .import-section,
+  .demo-section {
+    flex: 1;
+    text-align: center;
+
+    button {
+      min-width: 140px;
+      height: 48px;
+      font-weight: 500;
+      margin-bottom: 12px;
+
+      mat-icon {
+        margin-right: 8px;
+      }
+
+      mat-spinner {
+        margin-right: 8px;
+      }
+    }
+
+    .action-description {
+      margin: 0;
+      font-size: 14px;
+      color: #666;
+      line-height: 1.4;
+
+      strong {
+        color: #d32f2f;
+        font-weight: 600;
+      }
+    }
+  }
+
+  mat-divider {
+    height: 80px;
+  }
+}
+
 .section-card {
   background: white;
   border-radius: 8px;
@@ -150,6 +216,24 @@
   .section-card {
     mat-card-content {
       padding: 12px !important;
+    }
+  }
+
+  .export-import-actions {
+    flex-direction: column;
+    gap: 20px;
+    padding: 12px;
+
+    mat-divider {
+      display: none;
+    }
+
+    .export-section,
+    .import-section,
+    .demo-section {
+      button {
+        width: 100%;
+      }
     }
   }
 }

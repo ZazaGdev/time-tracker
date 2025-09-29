@@ -5,6 +5,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDialog } from '@angular/material/dialog';
 import { TimerService, TaxonomyService } from '../../core/services';
 import { Category, Subcategory, Tag } from '../../core/models';
 import { seedSampleData } from '../../core/data';
@@ -34,7 +35,11 @@ export class TimerFormComponent implements OnInit {
   subcategoryId: number | null = null;
   selectedTagIds: number[] = [];
 
-  constructor(public timerService: TimerService, private taxonomyService: TaxonomyService) {}
+  constructor(
+    public timerService: TimerService,
+    private taxonomyService: TaxonomyService,
+    private dialog: MatDialog
+  ) {}
 
   async ngOnInit(): Promise<void> {
     try {
@@ -78,38 +83,73 @@ export class TimerFormComponent implements OnInit {
   }
 
   async startTimer(): Promise<void> {
+    // Validate category selection
     if (!this.categoryId) {
-      alert('Please select a category');
+      alert('Please select a category before starting the timer.');
       return;
     }
 
     try {
+      // Check if there's an active timer that will be auto-stopped
+      const activeTimer = this.timerService.active();
+      if (activeTimer) {
+        const confirmed = confirm(
+          'Starting a new timer will automatically stop the current running timer. Do you want to continue?'
+        );
+        if (!confirmed) {
+          return;
+        }
+      }
+
+      // Start the new timer (TimerService.startTimer already handles stopping existing timer)
       await this.timerService.startTimer({
         categoryId: this.categoryId,
         subcategoryId: this.subcategoryId || undefined,
         tagIds: [...this.selectedTagIds],
       });
+
+      console.log('Timer started successfully');
     } catch (error) {
       console.error('Error starting timer:', error);
-      alert('Failed to start timer');
+      alert('Failed to start timer. Please try again.');
     }
   }
 
   async stopTimer(): Promise<void> {
+    // Confirm stop action
+    const confirmed = confirm(
+      'Are you sure you want to stop the current timer? This will save the session and cannot be undone.'
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
     try {
       const sessionId = await this.timerService.stopTimer();
-      console.log('Timer stopped, session created:', sessionId);
+      console.log('Timer stopped successfully, session created:', sessionId);
+
+      // Optional: Show success message
+      // alert('Timer stopped and session saved successfully!');
     } catch (error) {
       console.error('Error stopping timer:', error);
-      alert('Failed to stop timer');
+      alert('Failed to stop timer. Please try again.');
     }
   }
 
   get canStart(): boolean {
-    return this.categoryId !== null && !this.timerService.active();
+    // Can start only if:
+    // 1. A category is selected (required)
+    // 2. Categories have been loaded
+    return this.categoryId !== null && this.categories().length > 0;
   }
 
   get canStop(): boolean {
     return !!this.timerService.active();
+  }
+
+  get startButtonText(): string {
+    const activeTimer = this.timerService.active();
+    return activeTimer ? 'Start New Timer' : 'Start Timer';
   }
 }
