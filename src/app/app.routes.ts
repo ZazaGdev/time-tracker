@@ -7,7 +7,7 @@ export const routes: Routes = [
   },
   {
     path: 'manage',
-    loadComponent: () => import('./pages/manage/manage.component').then((m) => m.ManageComponent),
+    loadComponent: () => import('./pages/manage/manage.page').then((m) => m.ManagePage),
   },
   {
     path: 'reports',

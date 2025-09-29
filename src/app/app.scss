@@ -1,33 +1,131 @@
-.toolbar-spacer {
-  flex: 1 1 auto;
+.sidenav-container {
+  height: 100vh;
 }
 
-.active-link {
-  background-color: rgba(255, 255, 255, 0.15) !important;
-  border-radius: 4px;
-  color: white !important;
+.sidenav {
+  width: 280px;
+  background-color: #fff;
+  border-right: 1px solid #e0e0e0;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
 }
 
-.main-content {
-  background-color: #fafafa;
-  min-height: calc(100vh - 64px); /* Account for toolbar height */
-}
+// App Branding
+.app-branding {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 20px;
+  background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
+  color: white;
+  border-bottom: 1px solid #e0e0e0;
 
-// Ensure toolbar styling
-mat-toolbar {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-  nav {
-    display: flex;
-    gap: 8px;
+  .app-logo {
+    .logo-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
   }
 
-  a[mat-button] {
-    color: white;
+  .app-name {
+    margin: 0;
+    font-size: 20px;
     font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+}
+
+// Navigation Menu
+.nav-menu {
+  padding: 8px 0;
+
+  a[mat-list-item] {
+    margin: 4px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+    color: #616161;
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: #f5f5f5;
+      color: #1976d2;
+    }
+
+    mat-icon {
+      color: inherit;
+    }
+
+    span {
+      font-weight: 500;
+    }
+  }
+}
+
+.active-nav-item {
+  background-color: #e3f2fd !important;
+  color: #1976d2 !important;
+
+  mat-icon {
+    color: #1976d2 !important;
+  }
+
+  span {
+    font-weight: 600 !important;
+  }
+}
+
+// Main Content Area
+.main-content {
+  background-color: #fafafa;
+}
+
+.top-toolbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+
+  .menu-button {
+    margin-right: 8px;
+  }
+
+  .toolbar-title {
+    font-weight: 500;
+    font-size: 18px;
+  }
+
+  .toolbar-spacer {
+    flex: 1 1 auto;
+  }
+}
+
+.page-content {
+  min-height: calc(100vh - 64px);
+  background-color: #fafafa;
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .sidenav {
+    width: 250px;
+  }
+
+  .app-branding {
+    padding: 20px 16px;
+
+    .app-name {
+      font-size: 18px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .sidenav {
+    width: 220px;
+  }
+
+  .app-branding {
+    padding: 16px 12px;
+
+    .app-name {
+      font-size: 16px;
     }
   }
 }
