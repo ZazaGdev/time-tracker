@@ -1,13 +1,27 @@
 <div class="reports-page">
-  <h1>Daily Reports</h1>
+  <h1>Time Reports</h1>
 
-  <!-- Date Selection -->
-  <mat-card class="date-card">
+  <!-- Controls Card -->
+  <mat-card class="controls-card">
     <mat-card-content>
-      <mat-form-field appearance="outline">
-        <mat-label>Select Date</mat-label>
-        <input matInput type="date" [value]="selectedDate()" (change)="onDateChange($event)" />
-      </mat-form-field>
+      <div class="controls-row">
+        <!-- Date Selection -->
+        <mat-form-field appearance="outline">
+          <mat-label>Select Date</mat-label>
+          <input matInput type="date" [value]="selectedDate()" (change)="onDateChange($event)" />
+        </mat-form-field>
+
+        <!-- Period Toggle -->
+        <mat-button-toggle-group
+          [value]="selectedPeriod()"
+          (change)="onPeriodChange($event.value)"
+          class="period-toggle"
+        >
+          <mat-button-toggle value="daily">Daily</mat-button-toggle>
+          <mat-button-toggle value="weekly">Weekly</mat-button-toggle>
+          <mat-button-toggle value="monthly">Monthly</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
     </mat-card-content>
   </mat-card>
 
@@ -17,10 +31,21 @@
     <p>Loading report data...</p>
   </div>
 
+  <!-- Hours Chart Component -->
+  <app-hours-chart
+    #hoursChart
+    [date]="selectedDateObj()"
+    [period]="selectedPeriod()"
+    *ngIf="!loading()"
+  >
+  </app-hours-chart>
+
   <!-- Report Table -->
   <mat-card class="report-card" *ngIf="!loading()">
     <mat-card-header>
-      <mat-card-title>Time Tracking Summary for {{ selectedDate() }}</mat-card-title>
+      <mat-card-title
+        >{{ getPeriodLabel() }} Time Tracking Summary for {{ selectedDate() }}</mat-card-title
+      >
     </mat-card-header>
 
     <mat-card-content>

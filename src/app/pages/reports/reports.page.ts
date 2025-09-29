@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -6,8 +6,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ReportService, TaxonomyService } from '../../core/services';
-import { DayTotals } from '../../core/services/report.service';
+import {
+  DayTotals,
+  PeriodTotals,
+  ChartData,
+  ReportPeriod,
+} from '../../core/services/report.service';
+import { HoursChartComponent } from '../../components/hours-chart/hours-chart.component';
 import { Category, Subcategory, Tag } from '../../core/models';
 
 interface ReportRow {
@@ -28,31 +35,44 @@ interface ReportRow {
     MatTableModule,
     MatCardModule,
     MatProgressSpinnerModule,
+    MatButtonToggleModule,
+    HoursChartComponent,
   ],
   templateUrl: './reports.page.html',
   styleUrls: ['./reports.page.scss'],
 })
 export class ReportsPage implements OnInit {
+  @ViewChild('hoursChart', { static: false }) hoursChart!: HoursChartComponent;
+
   // Current selected date
   selectedDate = signal<string>('');
+
+  // Current report period
+  selectedPeriod = signal<ReportPeriod>('daily');
 
   // Loading state
   loading = signal<boolean>(false);
 
   // Raw data from services
-  private dayTotals = signal<DayTotals[]>([]);
+  private periodTotals = signal<PeriodTotals[]>([]);
   private categories = signal<Category[]>([]);
   private subcategories = signal<Subcategory[]>([]);
   private tags = signal<Tag[]>([]);
 
+  // Computed date object for chart component
+  selectedDateObj = computed(() => {
+    const dateStr = this.selectedDate();
+    return dateStr ? new Date(dateStr + 'T00:00:00') : new Date();
+  });
+
   // Computed report data for display
   reportData = computed<ReportRow[]>(() => {
-    const totals = this.dayTotals();
+    const totals = this.periodTotals();
     const cats = this.categories();
     const subs = this.subcategories();
     const tagList = this.tags();
 
-    return totals.map((total) => {
+    return totals.map((total: PeriodTotals) => {
       // Find category name
       const category = cats.find((c) => c.id === total.categoryId);
       const categoryName = category?.name || 'Unknown';
@@ -65,8 +85,8 @@ export class ReportsPage implements OnInit {
 
       // Find tag names
       const tagNames = total.tagIds
-        .map((tagId) => tagList.find((t) => t.id === tagId)?.name)
-        .filter((name) => name !== undefined)
+        .map((tagId: number) => tagList.find((t) => t.id === tagId)?.name)
+        .filter((name: string | undefined) => name !== undefined)
         .join(', ');
 
       // Convert milliseconds to hours with 2 decimal places
@@ -143,7 +163,7 @@ export class ReportsPage implements OnInit {
   }
 
   /**
-   * Load report data for the selected date
+   * Load report data for the selected date and period
    */
   async loadReportData(): Promise<void> {
     if (!this.selectedDate()) {
@@ -155,13 +175,31 @@ export class ReportsPage implements OnInit {
     try {
       // Parse the date string to a Date object
       const dateObj = new Date(this.selectedDate() + 'T00:00:00');
+      const period = this.selectedPeriod();
 
-      // Get totals for the selected date
-      const totals = await this.reportService.totalsForDate(dateObj);
-      this.dayTotals.set(totals);
+      // Get totals based on period
+      let totals: PeriodTotals[];
+      switch (period) {
+        case 'daily':
+          totals = await this.reportService.totalsForDate(dateObj);
+          break;
+        case 'weekly':
+          totals = await this.reportService.totalsForWeek(dateObj);
+          break;
+        case 'monthly':
+          totals = await this.reportService.totalsForMonth(dateObj);
+          break;
+      }
+
+      this.periodTotals.set(totals);
+
+      // Refresh chart component if available
+      if (this.hoursChart) {
+        await this.hoursChart.refresh();
+      }
     } catch (error) {
       console.error('Error loading report data:', error);
-      this.dayTotals.set([]);
+      this.periodTotals.set([]);
     } finally {
       this.loading.set(false);
     }
@@ -177,9 +215,40 @@ export class ReportsPage implements OnInit {
   }
 
   /**
+   * Handle period change event
+   */
+  async onPeriodChange(period: ReportPeriod): Promise<void> {
+    this.selectedPeriod.set(period);
+
+    // Update chart component inputs
+    if (this.hoursChart) {
+      this.hoursChart.period = period;
+      this.hoursChart.date = this.selectedDateObj();
+      await this.hoursChart.refresh();
+    }
+
+    await this.loadReportData();
+  }
+
+  /**
    * Get total hours for all entries
    */
   getTotalHours(): number {
     return this.reportData().reduce((sum, row) => sum + row.hours, 0);
+  }
+
+  /**
+   * Get period label for display
+   */
+  getPeriodLabel(): string {
+    const period = this.selectedPeriod();
+    switch (period) {
+      case 'daily':
+        return 'Day';
+      case 'weekly':
+        return 'Week';
+      case 'monthly':
+        return 'Month';
+    }
   }
 }

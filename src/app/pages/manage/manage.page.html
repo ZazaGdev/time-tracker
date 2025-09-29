@@ -55,19 +55,37 @@
 
         <!-- Demo Data Seeding Section -->
         <div class="demo-section">
-          <button
-            mat-raised-button
-            color="warn"
-            (click)="seedDemoData()"
-            [disabled]="isSeedingDemo()"
-          >
-            <mat-icon *ngIf="!isSeedingDemo()">science</mat-icon>
-            <mat-spinner *ngIf="isSeedingDemo()" diameter="20"></mat-spinner>
-            {{ isSeedingDemo() ? 'Seeding...' : 'Seed Demo Data' }}
-          </button>
-          <p class="action-description">
-            <strong>[DEV]</strong> Add sample data for testing (clears existing data)
-          </p>
+          <div class="demo-buttons">
+            <button
+              mat-raised-button
+              color="warn"
+              (click)="seedDemoData()"
+              [disabled]="isSeedingDemo()"
+            >
+              <mat-icon *ngIf="!isSeedingDemo()">science</mat-icon>
+              <mat-spinner *ngIf="isSeedingDemo()" diameter="20"></mat-spinner>
+              {{ isSeedingDemo() ? 'Seeding...' : 'Simple Demo' }}
+            </button>
+
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="seedComplexDemoData()"
+              [disabled]="isSeedingDemo()"
+            >
+              <mat-icon *ngIf="!isSeedingDemo()">analytics</mat-icon>
+              <mat-spinner *ngIf="isSeedingDemo()" diameter="20"></mat-spinner>
+              {{ isSeedingDemo() ? 'Seeding...' : 'Complex Demo' }}
+            </button>
+          </div>
+          <div class="demo-descriptions">
+            <p class="action-description">
+              <strong>Simple:</strong> Basic data for today (4.5 hours)
+            </p>
+            <p class="action-description">
+              <strong>Complex:</strong> 4 weeks of realistic data across categories
+            </p>
+          </div>
         </div>
       </div>
     </mat-card-content>

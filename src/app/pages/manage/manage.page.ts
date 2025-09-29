@@ -566,4 +566,345 @@ export class ManagePage implements OnInit {
       this.isSeedingDemo.set(false);
     }
   }
+
+  /**
+   * Seed complex demo data for comprehensive testing
+   * Creates data across multiple weeks and months for better testing
+   */
+  async seedComplexDemoData(): Promise<void> {
+    if (this.isSeedingDemo()) return;
+
+    this.isSeedingDemo.set(true);
+
+    try {
+      // Clear existing data first
+      const confirmClear = confirm(
+        'This will clear all existing data and add comprehensive demo data spanning multiple weeks. Are you sure you want to continue?'
+      );
+
+      if (!confirmClear) {
+        return;
+      }
+
+      // Variables to track demo data creation
+      const daysToGenerate = 28;
+      let totalHours = 0;
+      let sessionCount = 0;
+
+      // Clear all existing data within a transaction
+      await db.transaction(
+        'rw',
+        [db.categories, db.subcategories, db.tags, db.sessions, db.activeTimer],
+        async () => {
+          await Promise.all([
+            db.categories.clear(),
+            db.subcategories.clear(),
+            db.tags.clear(),
+            db.sessions.clear(),
+            db.activeTimer.clear(),
+          ]);
+
+          // Add comprehensive categories
+          const workCategoryId = await db.categories.add({ name: 'Work' });
+          const personalCategoryId = await db.categories.add({ name: 'Personal' });
+          const learningCategoryId = await db.categories.add({ name: 'Learning' });
+          const meetingsCategoryId = await db.categories.add({ name: 'Meetings' });
+          const adminCategoryId = await db.categories.add({ name: 'Admin' });
+          const projectsCategoryId = await db.categories.add({ name: 'Side Projects' });
+
+          // Add comprehensive subcategories
+          const developmentSubId = await db.subcategories.add({
+            name: 'Development',
+            categoryId: workCategoryId as number,
+          });
+          const reviewSubId = await db.subcategories.add({
+            name: 'Code Review',
+            categoryId: workCategoryId as number,
+          });
+          const planningSubId = await db.subcategories.add({
+            name: 'Planning',
+            categoryId: workCategoryId as number,
+          });
+          const testingSubId = await db.subcategories.add({
+            name: 'Testing',
+            categoryId: workCategoryId as number,
+          });
+          const deploymentSubId = await db.subcategories.add({
+            name: 'Deployment',
+            categoryId: workCategoryId as number,
+          });
+
+          const exerciseSubId = await db.subcategories.add({
+            name: 'Exercise',
+            categoryId: personalCategoryId as number,
+          });
+          const cookingSubId = await db.subcategories.add({
+            name: 'Cooking',
+            categoryId: personalCategoryId as number,
+          });
+          const readingSubId = await db.subcategories.add({
+            name: 'Reading',
+            categoryId: personalCategoryId as number,
+          });
+
+          const courseSubId = await db.subcategories.add({
+            name: 'Online Course',
+            categoryId: learningCategoryId as number,
+          });
+          const researchSubId = await db.subcategories.add({
+            name: 'Research',
+            categoryId: learningCategoryId as number,
+          });
+          const documentationSubId = await db.subcategories.add({
+            name: 'Documentation',
+            categoryId: learningCategoryId as number,
+          });
+
+          const standupSubId = await db.subcategories.add({
+            name: 'Daily Standup',
+            categoryId: meetingsCategoryId as number,
+          });
+          const reviewMeetingSubId = await db.subcategories.add({
+            name: 'Sprint Review',
+            categoryId: meetingsCategoryId as number,
+          });
+          const oneOnOneSubId = await db.subcategories.add({
+            name: '1-on-1',
+            categoryId: meetingsCategoryId as number,
+          });
+
+          // Add comprehensive tags
+          const angularTagId = await db.tags.add({ name: 'Angular' });
+          const typescriptTagId = await db.tags.add({ name: 'TypeScript' });
+          const reactTagId = await db.tags.add({ name: 'React' });
+          const nodeTagId = await db.tags.add({ name: 'Node.js' });
+          const frontendTagId = await db.tags.add({ name: 'Frontend' });
+          const backendTagId = await db.tags.add({ name: 'Backend' });
+          const bugfixTagId = await db.tags.add({ name: 'Bug Fix' });
+          const featureTagId = await db.tags.add({ name: 'New Feature' });
+          const refactorTagId = await db.tags.add({ name: 'Refactoring' });
+          const urgentTagId = await db.tags.add({ name: 'Urgent' });
+          const apiTagId = await db.tags.add({ name: 'API' });
+          const uiTagId = await db.tags.add({ name: 'UI/UX' });
+
+          // Generate sessions for the last 4 weeks (28 days)
+          const today = new Date();
+
+          for (let dayOffset = daysToGenerate - 1; dayOffset >= 0; dayOffset--) {
+            const currentDay = new Date(today);
+            currentDay.setDate(currentDay.getDate() - dayOffset);
+
+            // Skip weekends for work-related activities
+            const dayOfWeek = currentDay.getDay();
+            const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+            if (isWeekend) {
+              // Add some personal activities on weekends
+              const sessions = [
+                {
+                  start: 9,
+                  end: 10.5, // 1.5 hours
+                  category: personalCategoryId as number,
+                  subcategory: exerciseSubId as number,
+                  tags: [],
+                },
+                {
+                  start: 11,
+                  end: 12, // 1 hour
+                  category: personalCategoryId as number,
+                  subcategory: cookingSubId as number,
+                  tags: [],
+                },
+                {
+                  start: 14,
+                  end: 16, // 2 hours
+                  category: learningCategoryId as number,
+                  subcategory: courseSubId as number,
+                  tags: [angularTagId as number, frontendTagId as number],
+                },
+              ];
+
+              for (const session of sessions) {
+                const startTime = new Date(currentDay);
+                startTime.setHours(Math.floor(session.start), (session.start % 1) * 60, 0, 0);
+
+                const endTime = new Date(currentDay);
+                endTime.setHours(Math.floor(session.end), (session.end % 1) * 60, 0, 0);
+
+                await db.sessions.add({
+                  categoryId: session.category,
+                  subcategoryId: session.subcategory,
+                  tagIds: session.tags,
+                  startedAt: startTime.toISOString(),
+                  endedAt: endTime.toISOString(),
+                  durationMs: endTime.getTime() - startTime.getTime(),
+                });
+
+                totalHours += session.end - session.start;
+                sessionCount++;
+              }
+            } else {
+              // Weekday sessions - work and learning
+              const weekdaySessions = [
+                {
+                  start: 9,
+                  end: 9.25, // 15 min standup
+                  category: meetingsCategoryId as number,
+                  subcategory: standupSubId as number,
+                  tags: [],
+                },
+                {
+                  start: 9.5,
+                  end: 12, // 2.5 hours development
+                  category: workCategoryId as number,
+                  subcategory: developmentSubId as number,
+                  tags: [
+                    Math.random() > 0.5 ? angularTagId : reactTagId,
+                    Math.random() > 0.5 ? frontendTagId : backendTagId,
+                    Math.random() > 0.7 ? featureTagId : bugfixTagId,
+                  ].filter(Boolean) as number[],
+                },
+                {
+                  start: 13,
+                  end: 14.5, // 1.5 hours code review or testing
+                  category: workCategoryId as number,
+                  subcategory: Math.random() > 0.5 ? reviewSubId : testingSubId,
+                  tags: [
+                    typescriptTagId as number,
+                    Math.random() > 0.5 ? bugfixTagId : refactorTagId,
+                  ].filter(Boolean) as number[],
+                },
+                {
+                  start: 15,
+                  end: 17, // 2 hours project work
+                  category: workCategoryId as number,
+                  subcategory: developmentSubId as number,
+                  tags: [
+                    Math.random() > 0.3 ? nodeTagId : apiTagId,
+                    backendTagId as number,
+                    Math.random() > 0.8 ? urgentTagId : featureTagId,
+                  ].filter(Boolean) as number[],
+                },
+              ];
+
+              // Add extra sessions randomly
+              if (Math.random() > 0.6) {
+                weekdaySessions.push({
+                  start: 17.5,
+                  end: 18.5, // 1 hour evening learning
+                  category: learningCategoryId as number,
+                  subcategory: Math.random() > 0.5 ? courseSubId : documentationSubId,
+                  tags: [angularTagId as number, frontendTagId as number],
+                });
+              }
+
+              // Add weekly meetings
+              if (dayOfWeek === 1) {
+                // Monday - Sprint Planning
+                weekdaySessions.push({
+                  start: 14,
+                  end: 15.5, // 1.5 hours
+                  category: meetingsCategoryId as number,
+                  subcategory: reviewMeetingSubId as number,
+                  tags: [],
+                });
+              }
+
+              if (dayOfWeek === 3) {
+                // Wednesday - 1-on-1
+                weekdaySessions.push({
+                  start: 16,
+                  end: 16.5, // 30 minutes
+                  category: meetingsCategoryId as number,
+                  subcategory: oneOnOneSubId as number,
+                  tags: [],
+                });
+              }
+
+              for (const session of weekdaySessions) {
+                const startTime = new Date(currentDay);
+                startTime.setHours(Math.floor(session.start), (session.start % 1) * 60, 0, 0);
+
+                const endTime = new Date(currentDay);
+                endTime.setHours(Math.floor(session.end), (session.end % 1) * 60, 0, 0);
+
+                await db.sessions.add({
+                  categoryId: session.category,
+                  subcategoryId: session.subcategory,
+                  tagIds: session.tags,
+                  startedAt: startTime.toISOString(),
+                  endedAt: endTime.toISOString(),
+                  durationMs: endTime.getTime() - startTime.getTime(),
+                });
+
+                totalHours += session.end - session.start;
+                sessionCount++;
+              }
+            }
+          }
+
+          // Add some side project sessions across the month
+          for (let i = 0; i < 8; i++) {
+            const randomDay = new Date(today);
+            randomDay.setDate(randomDay.getDate() - Math.floor(Math.random() * daysToGenerate));
+
+            const startHour = 19 + Math.random() * 2; // Evening hours
+            const duration = 1 + Math.random() * 2; // 1-3 hours
+
+            const startTime = new Date(randomDay);
+            startTime.setHours(Math.floor(startHour), (startHour % 1) * 60, 0, 0);
+
+            const endTime = new Date(randomDay);
+            endTime.setHours(
+              Math.floor(startHour + duration),
+              ((startHour + duration) % 1) * 60,
+              0,
+              0
+            );
+
+            await db.sessions.add({
+              categoryId: projectsCategoryId as number,
+              subcategoryId: developmentSubId as number,
+              tagIds: [angularTagId as number, typescriptTagId as number, featureTagId as number],
+              startedAt: startTime.toISOString(),
+              endedAt: endTime.toISOString(),
+              durationMs: endTime.getTime() - startTime.getTime(),
+            });
+
+            totalHours += duration;
+            sessionCount++;
+          }
+        }
+      );
+
+      // Reload the page data
+      await this.loadAllData();
+
+      alert(
+        `Complex demo data seeded successfully!\n\n` +
+          `Created comprehensive data spanning ${daysToGenerate} days with:\n` +
+          `• 6 categories with multiple subcategories\n` +
+          `• 12 different tags\n` +
+          `• ${sessionCount} sessions totaling ~${Math.round(totalHours)} hours\n` +
+          `• Mix of work, personal, learning, and meeting activities\n` +
+          `• Weekend vs weekday activity patterns\n\n` +
+          `Perfect for testing weekly and monthly views!`
+      );
+
+      console.log('Complex demo data seeded successfully', {
+        totalHours: Math.round(totalHours),
+        sessionCount,
+        daysSpanned: daysToGenerate,
+      });
+    } catch (error) {
+      console.error('Error seeding complex demo data:', error);
+      alert(
+        `Failed to seed complex demo data: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`
+      );
+    } finally {
+      this.isSeedingDemo.set(false);
+    }
+  }
 }

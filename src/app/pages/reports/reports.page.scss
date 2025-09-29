@@ -13,7 +13,7 @@
   text-align: center;
 }
 
-.date-card {
+.controls-card {
   margin-bottom: 24px;
   background: white;
   border-radius: 8px;
@@ -22,11 +22,26 @@
   mat-card-content {
     padding: 20px;
 
-    mat-form-field {
-      width: 300px;
+    .controls-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+
+      mat-form-field {
+        width: 200px;
+      }
+
+      .period-toggle {
+        mat-button-toggle {
+          font-size: 14px;
+        }
+      }
     }
   }
 }
+
+// Chart styling is now handled by the HoursChartComponent
 
 .loading-container {
   display: flex;

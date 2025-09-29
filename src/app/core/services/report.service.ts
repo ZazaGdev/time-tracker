@@ -1,5 +1,13 @@
 import { Injectable } from '@angular/core';
-import { startOfDay, endOfDay } from 'date-fns';
+import {
+  startOfDay,
+  endOfDay,
+  startOfWeek,
+  endOfWeek,
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+} from 'date-fns';
 import { db } from '../data/db.service';
 import { Session } from '../models';
 
@@ -9,6 +17,18 @@ export interface DayTotals {
   tagIds: number[];
   totalMs: number;
 }
+
+export interface PeriodTotals extends DayTotals {
+  // Extends DayTotals for consistency
+}
+
+export interface ChartData {
+  categoryId: number;
+  categoryName: string;
+  totalHours: number;
+}
+
+export type ReportPeriod = 'daily' | 'weekly' | 'monthly';
 
 /**
  * Interface for time window boundaries
@@ -170,5 +190,121 @@ export class ReportService {
     const dayTotals = await this.totalsForDate(date);
     const totalMs = dayTotals.reduce((sum, total) => sum + total.totalMs, 0);
     return Math.round((totalMs / 3_600_000) * 100) / 100; // Convert to hours with 2 decimal precision
+  }
+
+  /**
+   * Gets totals for a specific week, grouped by category/subcategory/tags.
+   *
+   * @param date Any date within the target week
+   * @returns Array of totals sorted by totalMs descending
+   */
+  async totalsForWeek(date: Date): Promise<PeriodTotals[]> {
+    const weekStart = startOfWeek(date, { weekStartsOn: 1 }); // Monday start
+    const weekEnd = endOfWeek(date, { weekStartsOn: 1 });
+    return this.totalsForPeriod(weekStart, weekEnd);
+  }
+
+  /**
+   * Gets totals for a specific month, grouped by category/subcategory/tags.
+   *
+   * @param date Any date within the target month
+   * @returns Array of totals sorted by totalMs descending
+   */
+  async totalsForMonth(date: Date): Promise<PeriodTotals[]> {
+    const monthStart = startOfMonth(date);
+    const monthEnd = endOfMonth(date);
+    return this.totalsForPeriod(monthStart, monthEnd);
+  }
+
+  /**
+   * Generic method to get totals for any time period.
+   *
+   * @param periodStart Start of the period
+   * @param periodEnd End of the period
+   * @returns Array of totals sorted by totalMs descending
+   */
+  private async totalsForPeriod(periodStart: Date, periodEnd: Date): Promise<PeriodTotals[]> {
+    try {
+      // Get all days in the period
+      const daysInPeriod = eachDayOfInterval({ start: periodStart, end: periodEnd });
+
+      // Collect totals for each day
+      const allDayTotals: DayTotals[] = [];
+      for (const day of daysInPeriod) {
+        const dayTotals = await this.totalsForDate(day);
+        allDayTotals.push(...dayTotals);
+      }
+
+      // Group and sum by category/subcategory/tags
+      const groupMap = new Map<string, PeriodTotals>();
+
+      for (const dayTotal of allDayTotals) {
+        // Create grouping key: categoryId|subcategoryId|sortedTagIds
+        const sortedTagIds = [...dayTotal.tagIds].sort((a, b) => a - b);
+        const groupKey = `${dayTotal.categoryId}|${
+          dayTotal.subcategoryId || ''
+        }|${sortedTagIds.join(',')}`;
+
+        // Get or create group
+        if (!groupMap.has(groupKey)) {
+          groupMap.set(groupKey, {
+            categoryId: dayTotal.categoryId,
+            subcategoryId: dayTotal.subcategoryId,
+            tagIds: sortedTagIds,
+            totalMs: 0,
+          });
+        }
+
+        // Add to total
+        const group = groupMap.get(groupKey)!;
+        group.totalMs += dayTotal.totalMs;
+      }
+
+      // Convert map to array and sort by totalMs descending
+      return Array.from(groupMap.values()).sort((a, b) => b.totalMs - a.totalMs);
+    } catch (error) {
+      console.error('Error calculating period totals:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Gets chart data for the specified period, aggregated by category.
+   *
+   * @param date The date within the target period
+   * @param period The period type (daily, weekly, monthly)
+   * @returns Chart data with category names and hours
+   */
+  async getChartData(date: Date, period: ReportPeriod): Promise<ChartData[]> {
+    let totals: PeriodTotals[];
+
+    switch (period) {
+      case 'daily':
+        totals = await this.totalsForDate(date);
+        break;
+      case 'weekly':
+        totals = await this.totalsForWeek(date);
+        break;
+      case 'monthly':
+        totals = await this.totalsForMonth(date);
+        break;
+    }
+
+    // Aggregate by category only (ignore subcategories and tags)
+    const categoryMap = new Map<number, number>();
+
+    for (const total of totals) {
+      const existing = categoryMap.get(total.categoryId) || 0;
+      categoryMap.set(total.categoryId, existing + total.totalMs);
+    }
+
+    // Convert to chart data (we'll need to resolve category names in the component)
+    return Array.from(categoryMap.entries())
+      .map(([categoryId, totalMs]) => ({
+        categoryId,
+        categoryName: '', // Will be resolved in component
+        totalHours: Math.round((totalMs / 3_600_000) * 100) / 100, // Convert to hours with 2 decimal precision
+      }))
+      .sort((a, b) => b.totalHours - a.totalHours);
   }
 }
