@@ -15,6 +15,7 @@ import {
   ReportPeriod,
 } from '../../core/services/report.service';
 import { HoursChartComponent } from '../../components/hours-chart/hours-chart.component';
+import { CategoryPieChartComponent } from '../../components/category-pie-chart/category-pie-chart.component';
 import { Category, Subcategory, Tag } from '../../core/models';
 
 interface ReportRow {
@@ -37,12 +38,14 @@ interface ReportRow {
     MatProgressSpinnerModule,
     MatButtonToggleModule,
     HoursChartComponent,
+    CategoryPieChartComponent,
   ],
   templateUrl: './reports.page.html',
   styleUrls: ['./reports.page.scss'],
 })
 export class ReportsPage implements OnInit {
   @ViewChild('hoursChart', { static: false }) hoursChart!: HoursChartComponent;
+  @ViewChild('pieChart', { static: false }) pieChart!: CategoryPieChartComponent;
 
   // Current selected date
   selectedDate = signal<string>('');
@@ -193,9 +196,12 @@ export class ReportsPage implements OnInit {
 
       this.periodTotals.set(totals);
 
-      // Refresh chart component if available
+      // Refresh chart components if available
       if (this.hoursChart) {
         await this.hoursChart.refresh();
+      }
+      if (this.pieChart) {
+        await this.pieChart.refresh();
       }
     } catch (error) {
       console.error('Error loading report data:', error);
@@ -211,6 +217,17 @@ export class ReportsPage implements OnInit {
   async onDateChange(event: Event): Promise<void> {
     const target = event.target as HTMLInputElement;
     this.selectedDate.set(target.value);
+
+    // Update chart component dates
+    if (this.hoursChart) {
+      this.hoursChart.date = this.selectedDateObj();
+      await this.hoursChart.refresh();
+    }
+    if (this.pieChart) {
+      this.pieChart.date = this.selectedDateObj();
+      await this.pieChart.refresh();
+    }
+
     await this.loadReportData();
   }
 
@@ -227,9 +244,14 @@ export class ReportsPage implements OnInit {
       await this.hoursChart.refresh();
     }
 
+    if (this.pieChart) {
+      this.pieChart.period = period;
+      this.pieChart.date = this.selectedDateObj();
+      await this.pieChart.refresh();
+    }
+
     await this.loadReportData();
   }
-
   /**
    * Get total hours for all entries
    */
@@ -250,5 +272,23 @@ export class ReportsPage implements OnInit {
       case 'monthly':
         return 'Month';
     }
+  }
+
+  /**
+   * Get number of unique categories
+   */
+  getUniqueCategories(): number {
+    const categories = new Set(this.reportData().map((row) => row.category));
+    return categories.size;
+  }
+
+  /**
+   * Get average session length in hours
+   */
+  getAverageSession(): number {
+    const data = this.reportData();
+    if (data.length === 0) return 0;
+    const totalHours = this.getTotalHours();
+    return totalHours / data.length;
   }
 }

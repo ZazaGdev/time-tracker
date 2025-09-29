@@ -41,7 +41,105 @@
   }
 }
 
-// Chart styling is now handled by the HoursChartComponent
+// Dashboard Grid Layout
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 24px;
+  margin-top: 24px;
+
+  .chart-item {
+    display: flex;
+    flex-direction: column;
+
+    &.bar-chart {
+      grid-column: 1 / 2;
+      grid-row: 1 / 2;
+    }
+
+    &.pie-chart {
+      grid-column: 2 / 3;
+      grid-row: 1 / 2;
+    }
+
+    &.summary-stats {
+      grid-column: 2 / 3;
+      grid-row: 2 / 3;
+    }
+
+    &.data-table {
+      grid-column: 1 / 2;
+      grid-row: 2 / 3;
+    }
+  }
+}
+
+// Summary Stats Card
+.stats-card {
+  height: 100%;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 16px 0;
+
+    .stat-item {
+      text-align: center;
+      padding: 16px;
+      background: #f8f9fa;
+      border-radius: 8px;
+
+      .stat-value {
+        font-size: 2em;
+        font-weight: bold;
+        color: #2e7d32;
+        margin-bottom: 8px;
+      }
+
+      .stat-label {
+        font-size: 0.9em;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+
+    .chart-item {
+      &.bar-chart {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+      }
+
+      &.pie-chart {
+        grid-column: 1 / 2;
+        grid-row: 2 / 3;
+      }
+
+      &.summary-stats {
+        grid-column: 1 / 2;
+        grid-row: 3 / 4;
+      }
+
+      &.data-table {
+        grid-column: 1 / 2;
+        grid-row: 4 / 5;
+      }
+    }
+  }
+}
 
 .loading-container {
   display: flex;

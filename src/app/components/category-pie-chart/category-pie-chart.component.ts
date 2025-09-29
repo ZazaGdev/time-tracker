@@ -6,29 +6,26 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { ReportService, TaxonomyService } from '../../core/services';
 import { ReportPeriod } from '../../core/services/report.service';
 
-export interface HoursChartData {
+export interface PieChartData {
   categoryName: string;
   totalHours: number;
   categoryId: number;
+  color: string;
 }
 
 @Component({
-  selector: 'app-hours-chart',
+  selector: 'app-category-pie-chart',
   standalone: true,
   imports: [CommonModule, MatCardModule, BaseChartDirective],
   template: `
-    <mat-card class="hours-chart-card">
+    <mat-card class="pie-chart-card">
       <mat-card-header>
-        <mat-card-title>Hours by Category - {{ periodLabel }}</mat-card-title>
+        <mat-card-title>{{ title }} - {{ periodLabel }}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div class="chart-container" *ngIf="!loading() && chartData().length > 0">
-          <canvas
-            baseChart
-            [data]="barChartData"
-            [options]="barChartOptions"
-            [type]="barChartType"
-          ></canvas>
+          <canvas baseChart [type]="pieChartType" [data]="pieChartData" [options]="pieChartOptions">
+          </canvas>
         </div>
         <div class="no-data" *ngIf="!loading() && chartData().length === 0">
           <p>No data available for the selected period.</p>
@@ -41,26 +38,39 @@ export interface HoursChartData {
   `,
   styles: [
     `
-      .hours-chart-card {
-        margin-bottom: 24px;
+      .pie-chart-card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
         background: white;
         border-radius: 8px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       }
 
+      mat-card-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
       .chart-container {
+        flex: 1;
         width: 100%;
-        height: 400px;
+        min-height: 300px;
         position: relative;
 
         canvas {
           max-width: 100%;
-          height: 100%;
+          height: 100% !important;
         }
       }
 
       .no-data,
       .loading {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         text-align: center;
         padding: 40px;
         color: #666;
@@ -77,70 +87,72 @@ export interface HoursChartData {
     `,
   ],
 })
-export class HoursChartComponent implements OnInit {
+export class CategoryPieChartComponent implements OnInit {
   @Input() date!: Date;
-  @Input() period: ReportPeriod = 'daily';
+  @Input() period: ReportPeriod = 'weekly';
+  @Input() title: string = 'Category Distribution';
 
-  chartData = signal<HoursChartData[]>([]);
+  chartData = signal<PieChartData[]>([]);
   loading = signal<boolean>(false);
 
+  // Color palette for categories
+  private colors = [
+    '#FF6384',
+    '#36A2EB',
+    '#FFCE56',
+    '#4BC0C0',
+    '#9966FF',
+    '#FF9F40',
+    '#FF6384',
+    '#C9CBCF',
+    '#4BC0C0',
+    '#FF6384',
+    '#36A2EB',
+    '#FFCE56',
+  ];
+
   // Chart.js configuration for ng2-charts
-  public barChartType = 'bar' as const;
-  public barChartData: ChartConfiguration<'bar'>['data'] = {
+  public pieChartType = 'pie' as const;
+  public pieChartData: ChartConfiguration<'pie'>['data'] = {
     labels: [],
     datasets: [
       {
-        label: 'Hours',
         data: [],
-        backgroundColor: [
-          'rgba(54, 162, 235, 0.6)',
-          'rgba(255, 99, 132, 0.6)',
-          'rgba(255, 206, 86, 0.6)',
-          'rgba(75, 192, 192, 0.6)',
-          'rgba(153, 102, 255, 0.6)',
-          'rgba(255, 159, 64, 0.6)',
-          'rgba(199, 199, 199, 0.6)',
-          'rgba(83, 102, 255, 0.6)',
-        ],
-        borderColor: [
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 99, 132, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)',
-          'rgba(199, 199, 199, 1)',
-          'rgba(83, 102, 255, 1)',
-        ],
+        backgroundColor: this.colors,
+        borderColor: this.colors.map((color) => color.replace('0.6', '1')),
         borderWidth: 1,
       },
     ],
   };
 
-  public barChartOptions: ChartOptions<'bar'> = {
+  public pieChartOptions: ChartOptions<'pie'> = {
     responsive: true,
     maintainAspectRatio: false,
-    scales: {
-      y: {
-        beginAtZero: true,
-        title: {
-          display: true,
-          text: 'Hours',
-        },
-      },
-      x: {
-        title: {
-          display: true,
-          text: 'Categories',
-        },
-      },
-    },
     plugins: {
       title: {
         display: false, // We use the card title instead
       },
       legend: {
-        display: false, // Single dataset, no legend needed
+        display: true,
+        position: 'bottom',
+        labels: {
+          padding: 20,
+          usePointStyle: true,
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: (context: any) => {
+            const label = context.label || '';
+            const value = context.parsed;
+            const total = (context.dataset.data as number[]).reduce(
+              (a: number, b: number) => a + b,
+              0
+            );
+            const percentage = ((value / total) * 100).toFixed(1);
+            return `${label}: ${value.toFixed(2)}h (${percentage}%)`;
+          },
+        },
       },
     },
   };
@@ -171,17 +183,18 @@ export class HoursChartComponent implements OnInit {
       case 'monthly':
         return 'Monthly';
       default:
-        return 'Daily';
+        return 'Weekly';
     }
   }
 
-  private updateChart(data: HoursChartData[]): void {
-    this.barChartData = {
+  private updateChart(data: PieChartData[]): void {
+    this.pieChartData = {
       labels: data.map((item) => item.categoryName),
       datasets: [
         {
-          ...this.barChartData.datasets[0],
+          ...this.pieChartData.datasets[0],
           data: data.map((item) => item.totalHours),
+          backgroundColor: data.map((_, index) => this.colors[index % this.colors.length]),
         },
       ],
     };
@@ -199,16 +212,17 @@ export class HoursChartComponent implements OnInit {
       // Get categories to resolve names
       const categories = await this.taxonomyService.getCategories();
 
-      // Resolve category names
-      const resolvedData: HoursChartData[] = rawChartData.map((item) => ({
+      // Resolve category names and add colors
+      const resolvedData: PieChartData[] = rawChartData.map((item, index) => ({
         categoryId: item.categoryId,
         categoryName: categories.find((c) => c.id === item.categoryId)?.name || 'Unknown',
         totalHours: item.totalHours,
+        color: this.colors[index % this.colors.length],
       }));
 
       this.chartData.set(resolvedData);
     } catch (error) {
-      console.error('Error loading chart data:', error);
+      console.error('Error loading pie chart data:', error);
       this.chartData.set([]);
     } finally {
       this.loading.set(false);
