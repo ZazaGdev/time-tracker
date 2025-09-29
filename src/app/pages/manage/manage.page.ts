@@ -23,10 +23,10 @@ import { Category, Subcategory, Tag } from '../../core/models';
     MatFormFieldModule,
     MatCardModule,
     MatListModule,
-    MatIconModule
+    MatIconModule,
   ],
   templateUrl: './manage.page.html',
-  styleUrls: ['./manage.page.scss']
+  styleUrls: ['./manage.page.scss'],
 })
 export class ManagePage implements OnInit {
   // Data signals
@@ -48,11 +48,7 @@ export class ManagePage implements OnInit {
 
   private async loadAllData(): Promise<void> {
     try {
-      await Promise.all([
-        this.loadCategories(),
-        this.loadSubcategories(),
-        this.loadTags()
-      ]);
+      await Promise.all([this.loadCategories(), this.loadSubcategories(), this.loadTags()]);
     } catch (error) {
       console.error('Error loading data:', error);
     }
@@ -66,14 +62,16 @@ export class ManagePage implements OnInit {
   private async loadSubcategories(): Promise<void> {
     const subcategories: Subcategory[] = [];
     const categories = this.categories();
-    
+
     for (const category of categories) {
       if (category.id) {
-        const categorySubcategories = await this.taxonomyService.getSubcategoriesForCategory(category.id);
+        const categorySubcategories = await this.taxonomyService.getSubcategoriesForCategory(
+          category.id
+        );
         subcategories.push(...categorySubcategories);
       }
     }
-    
+
     this.subcategories.set(subcategories);
   }
 
@@ -91,8 +89,8 @@ export class ManagePage implements OnInit {
     }
 
     // Check for duplicates
-    const existingCategory = this.categories().find(c => 
-      c.name.toLowerCase() === name.toLowerCase()
+    const existingCategory = this.categories().find(
+      (c) => c.name.toLowerCase() === name.toLowerCase()
     );
     if (existingCategory) {
       alert('A category with this name already exists');
@@ -111,7 +109,7 @@ export class ManagePage implements OnInit {
 
   async deleteCategory(category: Category): Promise<void> {
     if (!category.id) return;
-    
+
     if (confirm(`Are you sure you want to delete "${category.name}" and all its subcategories?`)) {
       try {
         await this.taxonomyService.deleteCategory(category.id);
@@ -137,8 +135,8 @@ export class ManagePage implements OnInit {
     }
 
     // Check for duplicates within the same category
-    const existingSubcategory = this.subcategories().find(s => 
-      s.name.toLowerCase() === name.toLowerCase() && s.categoryId === this.selectedCategoryId
+    const existingSubcategory = this.subcategories().find(
+      (s) => s.name.toLowerCase() === name.toLowerCase() && s.categoryId === this.selectedCategoryId
     );
     if (existingSubcategory) {
       alert('A subcategory with this name already exists in this category');
@@ -179,9 +177,7 @@ export class ManagePage implements OnInit {
     }
 
     // Check for duplicates
-    const existingTag = this.tags().find(t => 
-      t.name.toLowerCase() === name.toLowerCase()
-    );
+    const existingTag = this.tags().find((t) => t.name.toLowerCase() === name.toLowerCase());
     if (existingTag) {
       alert('A tag with this name already exists');
       return;
@@ -213,7 +209,7 @@ export class ManagePage implements OnInit {
 
   // Helper methods
   getCategoryName(categoryId: number): string {
-    const category = this.categories().find(c => c.id === categoryId);
+    const category = this.categories().find((c) => c.id === categoryId);
     return category ? category.name : 'Unknown';
   }
 

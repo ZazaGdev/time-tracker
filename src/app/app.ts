@@ -20,9 +20,9 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule,
   ],
   templateUrl: './app.html',
-  styleUrls: ['./app.scss'],
+  styleUrl: './app.scss',
 })
-export class AppComponent {
+export class App {
   title = signal('Trackie');
   sidenavOpened = signal(false);
 

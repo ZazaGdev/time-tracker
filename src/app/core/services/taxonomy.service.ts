@@ -47,7 +47,7 @@ export class TaxonomyService {
    */
   async addCategory(name: string): Promise<number> {
     try {
-      return await db.categories.add({ name }) as number;
+      return (await db.categories.add({ name })) as number;
     } catch (error) {
       console.error('Error adding category:', error);
       throw error;
@@ -74,7 +74,7 @@ export class TaxonomyService {
    */
   async addSubcategory(name: string, categoryId: number): Promise<number> {
     try {
-      return await db.subcategories.add({ name, categoryId }) as number;
+      return (await db.subcategories.add({ name, categoryId })) as number;
     } catch (error) {
       console.error('Error adding subcategory:', error);
       throw error;
@@ -98,7 +98,7 @@ export class TaxonomyService {
    */
   async addTag(name: string): Promise<number> {
     try {
-      return await db.tags.add({ name }) as number;
+      return (await db.tags.add({ name })) as number;
     } catch (error) {
       console.error('Error adding tag:', error);
       throw error;

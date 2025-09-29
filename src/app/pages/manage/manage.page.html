@@ -12,16 +12,16 @@
         <div class="add-form">
           <mat-form-field appearance="outline">
             <mat-label>New Category Name</mat-label>
-            <input 
-              matInput 
-              [(ngModel)]="newCategoryName" 
+            <input
+              matInput
+              [(ngModel)]="newCategoryName"
               placeholder="Enter category name"
               (keyup.enter)="addCategory()"
-            >
+            />
           </mat-form-field>
-          <button 
-            mat-raised-button 
-            color="primary" 
+          <button
+            mat-raised-button
+            color="primary"
             (click)="addCategory()"
             [disabled]="!newCategoryName.trim()"
           >
@@ -32,23 +32,23 @@
         <!-- Categories List -->
         <div class="items-list">
           @if (categories().length === 0) {
-            <p class="no-items">No categories yet. Add one above.</p>
+          <p class="no-items">No categories yet. Add one above.</p>
           } @else {
-            <mat-list>
-              @for (category of categories(); track category.id) {
-                <mat-list-item class="list-item">
-                  <span class="item-name">{{ category.name }}</span>
-                  <button 
-                    mat-icon-button 
-                    color="warn" 
-                    (click)="deleteCategory(category)"
-                    class="delete-btn"
-                  >
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </mat-list-item>
-              }
-            </mat-list>
+          <mat-list>
+            @for (category of categories(); track category.id) {
+            <mat-list-item class="list-item">
+              <span class="item-name">{{ category.name }}</span>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="deleteCategory(category)"
+                class="delete-btn"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-list-item>
+            }
+          </mat-list>
           }
         </div>
       </mat-card-content>
@@ -66,26 +66,26 @@
             <mat-label>Parent Category</mat-label>
             <mat-select [(value)]="selectedCategoryId">
               @for (category of categories(); track category.id) {
-                <mat-option [value]="category.id">
-                  {{ category.name }}
-                </mat-option>
+              <mat-option [value]="category.id">
+                {{ category.name }}
+              </mat-option>
               }
             </mat-select>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>New Subcategory Name</mat-label>
-            <input 
-              matInput 
-              [(ngModel)]="newSubcategoryName" 
+            <input
+              matInput
+              [(ngModel)]="newSubcategoryName"
               placeholder="Enter subcategory name"
               (keyup.enter)="addSubcategory()"
-            >
+            />
           </mat-form-field>
 
-          <button 
-            mat-raised-button 
-            color="primary" 
+          <button
+            mat-raised-button
+            color="primary"
             (click)="addSubcategory()"
             [disabled]="!canAddSubcategory"
           >
@@ -96,26 +96,26 @@
         <!-- Subcategories List -->
         <div class="items-list">
           @if (subcategories().length === 0) {
-            <p class="no-items">No subcategories yet. Add one above.</p>
+          <p class="no-items">No subcategories yet. Add one above.</p>
           } @else {
-            <mat-list>
-              @for (subcategory of subcategories(); track subcategory.id) {
-                <mat-list-item class="list-item">
-                  <div class="subcategory-info">
-                    <span class="item-name">{{ subcategory.name }}</span>
-                    <span class="parent-category">{{ getCategoryName(subcategory.categoryId) }}</span>
-                  </div>
-                  <button 
-                    mat-icon-button 
-                    color="warn" 
-                    (click)="deleteSubcategory(subcategory)"
-                    class="delete-btn"
-                  >
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </mat-list-item>
-              }
-            </mat-list>
+          <mat-list>
+            @for (subcategory of subcategories(); track subcategory.id) {
+            <mat-list-item class="list-item">
+              <div class="subcategory-info">
+                <span class="item-name">{{ subcategory.name }}</span>
+                <span class="parent-category">{{ getCategoryName(subcategory.categoryId) }}</span>
+              </div>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="deleteSubcategory(subcategory)"
+                class="delete-btn"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-list-item>
+            }
+          </mat-list>
           }
         </div>
       </mat-card-content>
@@ -131,16 +131,16 @@
         <div class="add-form">
           <mat-form-field appearance="outline">
             <mat-label>New Tag Name</mat-label>
-            <input 
-              matInput 
-              [(ngModel)]="newTagName" 
+            <input
+              matInput
+              [(ngModel)]="newTagName"
               placeholder="Enter tag name"
               (keyup.enter)="addTag()"
-            >
+            />
           </mat-form-field>
-          <button 
-            mat-raised-button 
-            color="primary" 
+          <button
+            mat-raised-button
+            color="primary"
             (click)="addTag()"
             [disabled]="!newTagName.trim()"
           >
@@ -151,23 +151,18 @@
         <!-- Tags List -->
         <div class="items-list">
           @if (tags().length === 0) {
-            <p class="no-items">No tags yet. Add one above.</p>
+          <p class="no-items">No tags yet. Add one above.</p>
           } @else {
-            <mat-list>
-              @for (tag of tags(); track tag.id) {
-                <mat-list-item class="list-item">
-                  <span class="item-name">{{ tag.name }}</span>
-                  <button 
-                    mat-icon-button 
-                    color="warn" 
-                    (click)="deleteTag(tag)"
-                    class="delete-btn"
-                  >
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </mat-list-item>
-              }
-            </mat-list>
+          <mat-list>
+            @for (tag of tags(); track tag.id) {
+            <mat-list-item class="list-item">
+              <span class="item-name">{{ tag.name }}</span>
+              <button mat-icon-button color="warn" (click)="deleteTag(tag)" class="delete-btn">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-list-item>
+            }
+          </mat-list>
           }
         </div>
       </mat-card-content>
