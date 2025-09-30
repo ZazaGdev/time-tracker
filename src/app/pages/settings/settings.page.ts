@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 // Angular Material
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 
@@ -24,7 +23,6 @@ import { ThemeService, Theme } from '../../core/services/theme.service';
     // Angular Material
     MatCardModule,
     MatButtonModule,
-    MatButtonToggleModule,
     MatIconModule,
     MatDividerModule,
   ],
@@ -32,14 +30,30 @@ import { ThemeService, Theme } from '../../core/services/theme.service';
   styleUrls: ['./settings.page.scss'],
 })
 export class SettingsPage {
-  currentTheme = signal<string>('light');
+  constructor(private themeService: ThemeService) {}
 
-  constructor(private themeService: ThemeService) {
-    this.currentTheme.set(this.themeService.getCurrentTheme());
+  // Expose theme service properties
+  get availableThemes() {
+    return this.themeService.availableThemes;
   }
 
-  onThemeChange(theme: string): void {
-    this.currentTheme.set(theme);
-    this.themeService.setTheme(theme as Theme);
+  get currentTheme() {
+    return this.themeService.currentTheme;
+  }
+
+  get effectiveTheme() {
+    return this.themeService.effectiveTheme;
+  }
+
+  get isDark() {
+    return this.themeService.isDark;
+  }
+
+  onThemeChange(theme: Theme): void {
+    this.themeService.setTheme(theme);
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
   }
 }

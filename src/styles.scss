@@ -37,10 +37,15 @@ body {
   border: 1px solid rgba(0, 0, 0, 0.12) !important;
 }
 
+// Material components theming
 .mat-mdc-option {
-  background-color: white !important;
+  background-color: var(--surface-primary) !important;
+  color: var(--text-primary) !important;
 }
 
 .mat-mdc-option:hover {
-  background-color: rgba(0, 0, 0, 0.04) !important;
+  background-color: var(--hover-overlay) !important;
 }
+
+// Import theme variables after Material setup
+@import 'themes/themes.scss';

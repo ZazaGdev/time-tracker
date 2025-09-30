@@ -1,3 +1,5 @@
+// Theme variables will be available from global styles
+
 // Global App Styles
 * {
   box-sizing: border-box;
@@ -7,8 +9,10 @@
 
 body {
   font-family: 'Roboto', sans-serif;
-  background-color: #fafafa;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 // Main App Container
@@ -22,13 +26,17 @@ body {
 
 // Top Toolbar
 .top-toolbar {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: var(--surface-primary);
+  color: var(--text-primary);
+  box-shadow: 0 2px 4px var(--shadow-color);
   z-index: 100;
   position: relative;
+  border-bottom: 1px solid var(--border-secondary);
 
   .toolbar-title {
     font-weight: 500;
     font-size: 18px;
+    color: var(--text-primary);
   }
 
   .toolbar-spacer {
@@ -41,17 +49,17 @@ body {
   flex: 1;
   padding: 0;
   margin: 0;
-  background-color: #fafafa;
+  background-color: var(--bg-secondary);
   min-height: calc(100vh - 64px);
-
+  
   // Full-screen content
   :global(.mat-mdc-card) {
     margin: 0;
     border-radius: 0;
+    background-color: var(--surface-primary);
+    color: var(--text-primary);
   }
-}
-
-// Responsive Design - Mobile
+}// Responsive Design - Mobile
 @media (max-width: 768px) {
   .app-container {
     margin-left: 0; // No margin on mobile since sidebar overlays
