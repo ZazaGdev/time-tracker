@@ -1,8 +1,8 @@
 import { Component, Input, OnInit, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
-import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration, ChartOptions } from 'chart.js';
+// import { BaseChartDirective } from 'ng2-charts';
+// import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { ReportService, TaxonomyService } from '../../core/services';
 import { ReportPeriod } from '../../core/services/report.service';
 
@@ -16,16 +16,26 @@ export interface PieChartData {
 @Component({
   selector: 'app-category-pie-chart',
   standalone: true,
-  imports: [CommonModule, MatCardModule, BaseChartDirective],
+  imports: [CommonModule, MatCardModule],
   template: `
     <mat-card class="pie-chart-card">
       <mat-card-header>
         <mat-card-title>{{ title }} - {{ periodLabel }}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div class="chart-container" *ngIf="!loading() && chartData().length > 0">
-          <canvas baseChart [type]="pieChartType" [data]="pieChartData" [options]="pieChartOptions">
-          </canvas>
+        <div class="chart-container">
+          <!-- Chart temporarily disabled during migration to ApexCharts -->
+          <p style="text-align: center; padding: 40px; color: #666;">
+            Pie chart coming soon with ApexCharts
+          </p>
+          <!--
+          <canvas
+            baseChart
+            [type]="pieChartType"
+            [data]="pieChartData"
+            [options]="pieChartOptions"
+          ></canvas>
+          -->
         </div>
         <div class="no-data" *ngIf="!loading() && chartData().length === 0">
           <p>No data available for the selected period.</p>
@@ -56,12 +66,14 @@ export interface PieChartData {
       .chart-container {
         flex: 1;
         width: 100%;
-        min-height: 300px;
+        height: 300px;
         position: relative;
+        display: block;
 
         canvas {
-          max-width: 100%;
-          height: 100% !important;
+          width: 100% !important;
+          height: 300px !important;
+          display: block;
         }
       }
 
@@ -111,21 +123,23 @@ export class CategoryPieChartComponent implements OnInit {
     '#FFCE56',
   ];
 
-  // Chart.js configuration for ng2-charts
+  // Chart.js configuration for ng2-charts - Temporarily disabled during migration to ApexCharts
   public pieChartType = 'pie' as const;
-  public pieChartData: ChartConfiguration<'pie'>['data'] = {
-    labels: [],
+  // public pieChartData: ChartConfiguration<'pie'>['data'] = {
+  public pieChartData: any = {
+    labels: ['Loading...'],
     datasets: [
       {
-        data: [],
+        data: [1],
         backgroundColor: this.colors,
-        borderColor: this.colors.map((color) => color.replace('0.6', '1')),
+        borderColor: ['#ffffff'],
         borderWidth: 1,
       },
     ],
   };
 
-  public pieChartOptions: ChartOptions<'pie'> = {
+  // public pieChartOptions: ChartOptions<'pie'> = {
+  public pieChartOptions: any = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -188,7 +202,9 @@ export class CategoryPieChartComponent implements OnInit {
   }
 
   private updateChart(data: PieChartData[]): void {
+    console.log('Updating pie chart with data:', data);
     this.pieChartData = {
+      ...this.pieChartData,
       labels: data.map((item) => item.categoryName),
       datasets: [
         {

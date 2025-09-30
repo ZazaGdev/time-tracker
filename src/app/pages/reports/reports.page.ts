@@ -15,7 +15,7 @@ import {
   ReportPeriod,
 } from '../../core/services/report.service';
 import { HoursChartComponent } from '../../components/hours-chart/hours-chart.component';
-import { CategoryPieChartComponent } from '../../components/category-pie-chart/category-pie-chart.component';
+// import { CategoryPieChartComponent } from '../../components/category-pie-chart/category-pie-chart.component'; // Temporarily disabled
 import { Category, Subcategory, Tag } from '../../core/models';
 
 interface ReportRow {
@@ -38,14 +38,14 @@ interface ReportRow {
     MatProgressSpinnerModule,
     MatButtonToggleModule,
     HoursChartComponent,
-    CategoryPieChartComponent,
+    // CategoryPieChartComponent, // Temporarily disabled during migration
   ],
   templateUrl: './reports.page.html',
   styleUrls: ['./reports.page.scss'],
 })
 export class ReportsPage implements OnInit {
   @ViewChild('hoursChart', { static: false }) hoursChart!: HoursChartComponent;
-  @ViewChild('pieChart', { static: false }) pieChart!: CategoryPieChartComponent;
+  // @ViewChild('pieChart', { static: false }) pieChart!: CategoryPieChartComponent; // Temporarily disabled
 
   // Current selected date
   selectedDate = signal<string>('');
@@ -200,9 +200,10 @@ export class ReportsPage implements OnInit {
       if (this.hoursChart) {
         await this.hoursChart.refresh();
       }
-      if (this.pieChart) {
-        await this.pieChart.refresh();
-      }
+      // Pie chart temporarily disabled during migration
+      // if (this.pieChart) {
+      //   await this.pieChart.refresh();
+      // }
     } catch (error) {
       console.error('Error loading report data:', error);
       this.periodTotals.set([]);
@@ -218,15 +219,15 @@ export class ReportsPage implements OnInit {
     const target = event.target as HTMLInputElement;
     this.selectedDate.set(target.value);
 
-    // Update chart component dates
+    // Refresh chart component (it manages its own date range now)
     if (this.hoursChart) {
-      this.hoursChart.date = this.selectedDateObj();
       await this.hoursChart.refresh();
     }
-    if (this.pieChart) {
-      this.pieChart.date = this.selectedDateObj();
-      await this.pieChart.refresh();
-    }
+    // Pie chart temporarily disabled during migration
+    // if (this.pieChart) {
+    //   this.pieChart.date = this.selectedDateObj();
+    //   await this.pieChart.refresh();
+    // }
 
     await this.loadReportData();
   }
@@ -237,18 +238,17 @@ export class ReportsPage implements OnInit {
   async onPeriodChange(period: ReportPeriod): Promise<void> {
     this.selectedPeriod.set(period);
 
-    // Update chart component inputs
+    // Refresh chart component (it manages its own period now)
     if (this.hoursChart) {
-      this.hoursChart.period = period;
-      this.hoursChart.date = this.selectedDateObj();
       await this.hoursChart.refresh();
     }
 
-    if (this.pieChart) {
-      this.pieChart.period = period;
-      this.pieChart.date = this.selectedDateObj();
-      await this.pieChart.refresh();
-    }
+    // Pie chart temporarily disabled during migration
+    // if (this.pieChart) {
+    //   this.pieChart.period = period;
+    //   this.pieChart.date = this.selectedDateObj();
+    //   await this.pieChart.refresh();
+    // }
 
     await this.loadReportData();
   }

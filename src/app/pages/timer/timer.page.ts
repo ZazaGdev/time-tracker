@@ -21,8 +21,8 @@ import { TimerService } from '../../core/services';
         </mat-card-content>
       </mat-card>
 
-      <!-- Today's Hours Chart -->
-      <app-hours-chart [date]="today" period="daily"> </app-hours-chart>
+      <!-- Hours Chart -->
+      <app-hours-chart></app-hours-chart>
     </div>
   `,
   styles: [

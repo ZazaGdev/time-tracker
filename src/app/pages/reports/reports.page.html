@@ -33,13 +33,14 @@
 
   <!-- Dashboard Grid -->
   <div class="dashboard-grid" *ngIf="!loading()">
-    <!-- Hours Bar Chart -->
+    <!-- Hours Stacked Bar Chart -->
     <div class="chart-item bar-chart">
-      <app-hours-chart #hoursChart [date]="selectedDateObj()" [period]="selectedPeriod()">
-      </app-hours-chart>
+      <app-hours-chart #hoursChart></app-hours-chart>
     </div>
 
     <!-- Category Pie Chart -->
+    <!-- Temporarily disabled during migration to ApexCharts -->
+    <!--
     <div class="chart-item pie-chart">
       <app-category-pie-chart
         #pieChart
@@ -49,6 +50,7 @@
       >
       </app-category-pie-chart>
     </div>
+    -->
 
     <!-- Summary Stats Card -->
     <div class="chart-item summary-stats">

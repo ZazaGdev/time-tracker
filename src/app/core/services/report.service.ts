@@ -28,6 +28,20 @@ export interface ChartData {
   totalHours: number;
 }
 
+export interface StackedChartData {
+  date: string; // YYYY-MM-DD format
+  categories: {
+    categoryId: number;
+    categoryName: string;
+    hours: number;
+  }[];
+}
+
+export interface DateRangeFilter {
+  startDate: Date;
+  endDate: Date;
+}
+
 export type ReportPeriod = 'daily' | 'weekly' | 'monthly';
 
 /**
@@ -306,5 +320,73 @@ export class ReportService {
         totalHours: Math.round((totalMs / 3_600_000) * 100) / 100, // Convert to hours with 2 decimal precision
       }))
       .sort((a, b) => b.totalHours - a.totalHours);
+  }
+
+  /**
+   * Gets stacked chart data for a date range, grouped by date and category.
+   *
+   * @param dateRange The date range to query
+   * @returns Stacked chart data with daily breakdowns by category
+   */
+  async getStackedChartData(dateRange: DateRangeFilter): Promise<StackedChartData[]> {
+    const { startDate, endDate } = dateRange;
+
+    // Get all sessions in the date range
+    const startDateISO = startOfDay(startDate).toISOString();
+    const endDateISO = endOfDay(endDate).toISOString();
+
+    const sessions = await db.sessions
+      .where('startedAt')
+      .between(startDateISO, endDateISO, true, true)
+      .toArray();
+
+    // Get all days in the range
+    const daysInRange = eachDayOfInterval({ start: startDate, end: endDate });
+
+    // Group sessions by date and category
+    const dailyDataMap = new Map<string, Map<number, number>>();
+
+    for (const day of daysInRange) {
+      const dayKey = day.toISOString().split('T')[0]; // YYYY-MM-DD format
+      dailyDataMap.set(dayKey, new Map<number, number>());
+    }
+
+    // Process sessions
+    for (const session of sessions) {
+      if (!session.endedAt) continue; // Skip active sessions
+
+      const startTime = new Date(session.startedAt);
+      const sessionDate = startOfDay(startTime);
+      const dayKey = sessionDate.toISOString().split('T')[0];
+      const categoryId = session.categoryId;
+      const duration = session.durationMs; // Use the pre-calculated duration
+
+      const dayMap = dailyDataMap.get(dayKey);
+      if (dayMap) {
+        const existing = dayMap.get(categoryId) || 0;
+        dayMap.set(categoryId, existing + duration);
+      }
+    }
+
+    // Convert to StackedChartData format
+    const result: StackedChartData[] = [];
+
+    for (const [date, categoryMap] of dailyDataMap.entries()) {
+      const categories = Array.from(categoryMap.entries())
+        .map(([categoryId, totalMs]) => ({
+          categoryId,
+          categoryName: '', // Will be resolved in component
+          hours: Math.round((totalMs / 3_600_000) * 100) / 100, // Convert to hours with 2 decimal precision
+        }))
+        .filter((cat) => cat.hours > 0) // Only include categories with actual time
+        .sort((a, b) => b.hours - a.hours);
+
+      result.push({
+        date,
+        categories,
+      });
+    }
+
+    return result.sort((a, b) => a.date.localeCompare(b.date));
   }
 }
