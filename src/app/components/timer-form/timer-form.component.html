@@ -77,8 +77,10 @@
     </div>
 
     <!-- Validation Message -->
-    <div class="validation-message" *ngIf="!categoryId && categories().length > 0">
+    @if (!categoryId && categories().length > 0) {
+    <div class="validation-message">
       <p>⚠️ Please select a category to start tracking time</p>
     </div>
+    }
   </div>
 </div>

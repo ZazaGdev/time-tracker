@@ -48,7 +48,7 @@ interface ReportRow {
     MatCardModule,
     MatProgressSpinnerModule,
     MatButtonToggleModule,
-    HoursChartComponent,
+    HoursChartComponent, // Re-enabled with theme support
     // CategoryPieChartComponent, // Temporarily disabled during migration
   ],
   templateUrl: './reports.page.html',

@@ -1,13 +1,12 @@
 .reports-page {
   padding: 20px;
-  background-color: #fafafa;
+  background-color: var(--mat-sys-surface-container-low);
+  color: var(--mat-sys-on-surface);
   min-height: calc(100vh - 64px);
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .reports-page h1 {
-  color: #333;
+  color: var(--mat-sys-on-surface);
   margin-bottom: 32px;
   font-weight: 400;
   text-align: center;
@@ -15,9 +14,10 @@
 
 .controls-card {
   margin-bottom: 24px;
-  background: white;
+  background: var(--mat-sys-surface);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px var(--mat-sys-shadow);
+  border: 1px solid var(--mat-sys-outline-variant);
 
   mat-card-content {
     padding: 20px;
@@ -78,9 +78,10 @@
 // Summary Stats Card
 .stats-card {
   height: 100%;
-  background: white;
+  background: var(--mat-sys-surface);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px var(--mat-sys-shadow);
+  border: 1px solid var(--mat-sys-outline-variant);
 
   .stats-grid {
     display: grid;
@@ -91,19 +92,19 @@
     .stat-item {
       text-align: center;
       padding: 16px;
-      background: #f8f9fa;
+      background: var(--mat-sys-surface-container);
       border-radius: 8px;
 
       .stat-value {
         font-size: 2em;
         font-weight: bold;
-        color: #2e7d32;
+        color: var(--mat-sys-primary);
         margin-bottom: 8px;
       }
 
       .stat-label {
         font-size: 0.9em;
-        color: #666;
+        color: var(--mat-sys-on-surface-variant);
         text-transform: uppercase;
         letter-spacing: 0.5px;
       }
@@ -153,24 +154,25 @@
   }
 
   p {
-    color: #666;
+    color: var(--mat-sys-on-surface-variant);
     font-size: 16px;
   }
 }
 
 .report-card {
-  background: white;
+  background: var(--mat-sys-surface);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px var(--mat-sys-shadow);
+  border: 1px solid var(--mat-sys-outline-variant);
 
   mat-card-header {
-    background-color: #f5f5f5;
+    background-color: var(--mat-sys-surface-container);
     margin: -16px -16px 16px -16px;
     padding: 16px;
     border-radius: 8px 8px 0 0;
 
     mat-card-title {
-      color: #333;
+      color: var(--mat-sys-on-surface);
       font-size: 18px;
       font-weight: 500;
       margin: 0;
@@ -181,7 +183,7 @@
 .no-data {
   text-align: center;
   padding: 40px;
-  color: #666;
+  color: var(--mat-sys-on-surface-variant);
   font-style: italic;
 }
 
@@ -192,26 +194,28 @@
 
 .report-table {
   width: 100%;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
 
   th {
-    background-color: #f8f9fa;
+    background-color: var(--mat-sys-surface-container);
     font-weight: 600;
-    color: #333;
-    border-bottom: 2px solid #e9ecef;
+    color: var(--mat-sys-on-surface);
+    border-bottom: 2px solid var(--mat-sys-outline-variant);
   }
 
   td {
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
     padding: 12px 8px;
   }
 
   tr:hover {
-    background-color: #f8f9fa;
+    background-color: var(--mat-sys-surface-container-high);
   }
 }
 
 .empty-value {
-  color: #999;
+  color: var(--mat-sys-on-surface-variant);
   font-style: italic;
 }
 
@@ -224,14 +228,14 @@
 .total-row {
   margin-top: 16px;
   padding: 12px;
-  background-color: #f8f9fa;
+  background-color: var(--mat-sys-surface-container);
   border-radius: 4px;
   text-align: right;
-  border-top: 2px solid #dee2e6;
+  border-top: 2px solid var(--mat-sys-outline-variant);
 
   strong {
     font-size: 16px;
-    color: #333;
+    color: var(--mat-sys-on-surface);
   }
 }
 

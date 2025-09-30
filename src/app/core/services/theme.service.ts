@@ -23,20 +23,20 @@ export class ThemeService {
       name: 'light',
       displayName: 'Light',
       description: 'Light theme with bright colors',
-      icon: 'light_mode'
+      icon: 'light_mode',
     },
     {
       name: 'dark',
       displayName: 'Dark',
       description: 'Dark theme easy on the eyes',
-      icon: 'dark_mode'
+      icon: 'dark_mode',
     },
     {
       name: 'auto',
       displayName: 'Auto',
       description: 'Follows your system preference',
-      icon: 'auto_mode'
-    }
+      icon: 'auto_mode',
+    },
   ];
 
   // Read-only access to current theme
@@ -82,7 +82,7 @@ export class ThemeService {
       console.warn(`Invalid theme: ${theme}`);
       return;
     }
-    
+
     this._currentTheme.set(theme);
     localStorage.setItem('app-theme', theme);
   }
@@ -92,7 +92,7 @@ export class ThemeService {
   }
 
   getThemeConfig(theme: Theme): ThemeConfig | undefined {
-    return this.availableThemes.find(t => t.name === theme);
+    return this.availableThemes.find((t) => t.name === theme);
   }
 
   toggleTheme(): void {
@@ -113,31 +113,28 @@ export class ThemeService {
   }
 
   private applyTheme(theme: Theme): void {
-    const body = document.body;
     const html = document.documentElement;
     const effectiveTheme = this.effectiveTheme();
 
-    // Remove existing theme classes
-    body.classList.remove('light-theme', 'dark-theme', 'auto-theme');
-    html.classList.remove('light-theme', 'dark-theme', 'auto-theme');
-
-    // Apply theme classes - both the selected theme and effective theme
-    body.classList.add(`${theme}-theme`);
-    html.classList.add(`${theme}-theme`);
-
-    // Also apply effective theme class for CSS targeting
+    // Use the new CSS color-scheme approach as recommended by Material docs
     if (theme === 'auto') {
-      body.classList.add(`${effectiveTheme}-theme`);
-      html.classList.add(`${effectiveTheme}-theme`);
+      // Let system preference determine the theme
+      html.style.colorScheme = 'light dark';
+    } else {
+      // Apply explicit theme
+      html.style.colorScheme = effectiveTheme;
     }
 
-    // Set color scheme for browser UI
-    html.style.colorScheme = effectiveTheme;
+    // Add theme classes for custom component styling (optional)
+    document.body.className = document.body.className.replace(/\b(light|dark|auto)-theme\b/g, '');
+    document.body.classList.add(`${theme}-theme`);
 
     // Emit theme change event for other components
-    window.dispatchEvent(new CustomEvent('theme-changed', {
-      detail: { theme, effectiveTheme }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('theme-changed', {
+        detail: { theme, effectiveTheme },
+      })
+    );
   }
 
   private isValidTheme(theme: string): theme is Theme {

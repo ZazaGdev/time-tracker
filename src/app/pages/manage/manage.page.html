@@ -77,13 +77,44 @@
               <mat-spinner *ngIf="isSeedingDemo()" diameter="20"></mat-spinner>
               {{ isSeedingDemo() ? 'Seeding...' : 'Complex Demo' }}
             </button>
+
+            <button
+              mat-raised-button
+              color="accent"
+              (click)="seedSixMonthDemoData()"
+              [disabled]="isSeedingDemo()"
+            >
+              <mat-icon *ngIf="!isSeedingDemo()">calendar_view_month</mat-icon>
+              <mat-spinner *ngIf="isSeedingDemo()" diameter="20"></mat-spinner>
+              {{ isSeedingDemo() ? 'Seeding...' : '6-Month Comprehensive' }}
+            </button>
+
+            <button
+              mat-raised-button
+              color="warn"
+              (click)="clearAllData()"
+              [disabled]="isSeedingDemo()"
+              class="clear-data-btn"
+            >
+              <mat-icon *ngIf="!isSeedingDemo()">delete_forever</mat-icon>
+              <mat-spinner *ngIf="isSeedingDemo()" diameter="20"></mat-spinner>
+              {{ isSeedingDemo() ? 'Clearing...' : 'Clear All Data' }}
+            </button>
           </div>
           <div class="demo-descriptions">
             <p class="action-description">
               <strong>Simple:</strong> Basic data for today (4.5 hours)
             </p>
             <p class="action-description">
-              <strong>Complex:</strong> 4 weeks of realistic data across categories
+              <strong>Complex:</strong> 4 weeks of realistic data across 6 categories with 25+
+              subcategories
+            </p>
+            <p class="action-description">
+              <strong>6-Month:</strong> 6 months of comprehensive data with 10+ categories, 50+
+              subcategories, and 40+ tags
+            </p>
+            <p class="action-description clear-warning">
+              <strong>Clear All:</strong> ⚠️ Permanently deletes ALL your data (cannot be undone)
             </p>
           </div>
         </div>

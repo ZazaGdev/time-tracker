@@ -1,13 +1,12 @@
 .manage-page {
   padding: 20px;
-  background-color: #fafafa;
+  background-color: var(--mat-sys-surface-container-low);
+  color: var(--mat-sys-on-surface);
   min-height: calc(100vh - 64px);
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .manage-page h1 {
-  color: #333;
+  color: var(--mat-sys-on-surface);
   margin-bottom: 32px;
   font-weight: 400;
   text-align: center;
@@ -20,19 +19,20 @@
 }
 
 .export-import-card {
-  background: white;
+  background: var(--mat-sys-surface);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px var(--mat-sys-shadow);
   margin-bottom: 24px;
+  border: 1px solid var(--mat-sys-outline-variant);
 
   mat-card-header {
-    background-color: #e8f5e8;
+    background-color: var(--mat-sys-primary-container);
     margin: -16px -16px 16px -16px;
     padding: 16px;
     border-radius: 8px 8px 0 0;
 
     mat-card-title {
-      color: #2e7d32;
+      color: var(--mat-sys-on-primary-container);
       font-size: 18px;
       font-weight: 500;
       margin: 0;
@@ -57,9 +57,10 @@
       gap: 12px;
       justify-content: center;
       margin-bottom: 12px;
+      flex-wrap: wrap;
 
       button {
-        min-width: 120px;
+        min-width: 140px;
         height: 48px;
         font-weight: 500;
 
@@ -69,6 +70,22 @@
 
         mat-spinner {
           margin-right: 8px;
+        }
+
+        &.clear-data-btn {
+          background-color: var(--mat-sys-error) !important;
+          color: var(--mat-sys-on-error) !important;
+          border: 2px solid var(--mat-sys-error-container);
+
+          &:hover:not([disabled]) {
+            background-color: var(--mat-sys-error-container) !important;
+            color: var(--mat-sys-on-error-container) !important;
+          }
+
+          &[disabled] {
+            background-color: var(--mat-sys-surface-variant) !important;
+            color: var(--mat-sys-on-surface-variant) !important;
+          }
         }
       }
     }
@@ -82,12 +99,21 @@
     .action-description {
       margin: 0;
       font-size: 13px;
-      color: #666;
+      color: var(--mat-sys-on-surface-variant);
       line-height: 1.4;
 
       strong {
-        color: #2e7d32;
+        color: var(--mat-sys-primary);
         font-weight: 600;
+      }
+
+      &.clear-warning {
+        color: var(--mat-sys-error);
+        font-weight: 500;
+
+        strong {
+          color: var(--mat-sys-error);
+        }
       }
     }
   }
@@ -98,18 +124,19 @@
 }
 
 .section-card {
-  background: white;
+  background: var(--mat-sys-surface);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px var(--mat-sys-shadow);
+  border: 1px solid var(--mat-sys-outline-variant);
 
   mat-card-header {
-    background-color: #f5f5f5;
+    background-color: var(--mat-sys-surface-container);
     margin: -16px -16px 16px -16px;
     padding: 16px;
     border-radius: 8px 8px 0 0;
 
     mat-card-title {
-      color: #333;
+      color: var(--mat-sys-on-surface);
       font-size: 18px;
       font-weight: 500;
       margin: 0;
@@ -123,7 +150,7 @@
   gap: 16px;
   margin-bottom: 24px;
   padding: 16px;
-  background-color: #f9f9f9;
+  background-color: var(--mat-sys-surface-container-low);
   border-radius: 8px;
 
   mat-form-field {
@@ -143,7 +170,7 @@
 
   .no-items {
     text-align: center;
-    color: #666;
+    color: var(--mat-sys-on-surface-variant);
     font-style: italic;
     margin: 32px 0;
   }
@@ -152,7 +179,7 @@
     padding: 0;
 
     mat-list-item {
-      border-bottom: 1px solid #e0e0e0;
+      border-bottom: 1px solid var(--mat-sys-outline-variant);
 
       &:last-child {
         border-bottom: none;
@@ -169,13 +196,13 @@
   min-height: 56px !important;
 
   &:hover {
-    background-color: #f5f5f5;
+    background-color: var(--mat-sys-surface-container-high);
   }
 }
 
 .item-name {
   font-weight: 500;
-  color: #333;
+  color: var(--mat-sys-on-surface);
   font-size: 16px;
 }
 
@@ -190,7 +217,7 @@
 
   .parent-category {
     font-size: 12px;
-    color: #666;
+    color: var(--mat-sys-on-surface-variant);
     font-weight: 400;
 
     &::before {

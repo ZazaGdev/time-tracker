@@ -1,12 +1,10 @@
 .settings-page {
   padding: 24px;
-  max-width: 800px;
-  margin: 0 auto;
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
+  background-color: var(--mat-sys-surface-container-low);
+  color: var(--mat-sys-on-surface);
 
   h1 {
-    color: var(--text-primary);
+    color: var(--mat-sys-on-surface);
     margin-bottom: 32px;
     font-size: 2rem;
     font-weight: 300;
@@ -16,20 +14,20 @@
 .settings-card {
   margin-bottom: 24px;
   border-radius: 12px;
-  background-color: var(--surface-primary);
-  color: var(--text-primary);
-  box-shadow: 0 4px 12px var(--shadow-color);
-  border: 1px solid var(--border-secondary);
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  box-shadow: 0 4px 12px var(--mat-sys-shadow);
+  border: 1px solid var(--mat-sys-outline-variant);
 
   &:hover {
-    box-shadow: 0 6px 20px var(--shadow-color-strong);
+    box-shadow: 0 6px 20px var(--mat-sys-shadow);
     transition: box-shadow 0.3s ease;
   }
 }
 
 .settings-avatar {
-  background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-400) 100%);
-  color: white;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -45,7 +43,7 @@
   padding: 16px 0;
 
   .theme-description {
-    color: var(--text-secondary);
+    color: var(--mat-sys-on-surface-variant);
     font-size: 14px;
     margin-bottom: 16px;
   }
@@ -59,9 +57,9 @@
 
   .theme-option {
     padding: 16px;
-    border: 2px solid var(--border-secondary);
+    border: 2px solid var(--mat-sys-outline-variant);
     border-radius: 12px;
-    background-color: var(--surface-secondary);
+    background-color: var(--mat-sys-surface-container);
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
@@ -69,16 +67,16 @@
     gap: 12px;
 
     &:hover {
-      border-color: var(--primary-400);
-      background-color: var(--surface-tertiary);
+      border-color: var(--mat-sys-primary);
+      background-color: var(--mat-sys-surface-container-high);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px var(--shadow-color);
+      box-shadow: 0 4px 12px var(--mat-sys-shadow);
     }
 
     &.active {
-      border-color: var(--primary-600);
-      background-color: var(--focus-overlay);
-      box-shadow: 0 0 0 1px var(--primary-600);
+      border-color: var(--mat-sys-primary);
+      background-color: var(--mat-sys-primary-container);
+      box-shadow: 0 0 0 1px var(--mat-sys-primary);
     }
 
     .theme-preview-icon {
@@ -88,14 +86,18 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-400) 100%);
+      background: var(--mat-sys-primary);
 
-      &[data-theme="dark"] {
-        background: linear-gradient(135deg, #424242 0%, #616161 100%);
+      &[data-theme='dark'] {
+        background: var(--mat-sys-inverse-surface);
       }
 
-      &[data-theme="auto"] {
-        background: linear-gradient(135deg, var(--primary-600) 0%, #424242 100%);
+      &[data-theme='auto'] {
+        background: linear-gradient(
+          135deg,
+          var(--mat-sys-primary) 0%,
+          var(--mat-sys-inverse-surface) 100%
+        );
       }
 
       .theme-icon {
@@ -111,13 +113,13 @@
 
       h4 {
         margin: 0 0 4px 0;
-        color: var(--text-primary);
+        color: var(--mat-sys-on-surface);
         font-weight: 500;
       }
 
       p {
         margin: 0;
-        color: var(--text-secondary);
+        color: var(--mat-sys-on-surface-variant);
         font-size: 12px;
         line-height: 1.4;
       }
@@ -217,7 +219,6 @@ mat-divider {
   .settings-page {
     padding: 16px;
   }
-
 }
 
 // Dark theme styles

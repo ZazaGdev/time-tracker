@@ -1,28 +1,29 @@
 .timer-page {
   padding: 20px;
-  max-width: 600px;
-  background-color: #fafafa;
+  background-color: var(--mat-sys-surface-container-low);
   min-height: calc(100vh - 64px);
+  color: var(--mat-sys-on-surface);
 }
 
 .timer-page h1 {
-  color: #333;
+  color: var(--mat-sys-on-surface);
   margin-bottom: 24px;
   font-weight: 400;
 }
 
 .active-timer-status {
-  background-color: #e8f5e8;
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 24px;
-  border-left: 4px solid #4caf50;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid var(--mat-sys-primary);
+  box-shadow: 0 2px 4px var(--mat-sys-shadow);
 }
 
 .active-timer-status h2 {
   margin: 0;
-  color: #2e7d32;
+  color: var(--mat-sys-on-primary-container);
   font-size: 18px;
   font-weight: 500;
 }
@@ -31,22 +32,16 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  background-color: white;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
   padding: 24px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px var(--mat-sys-shadow);
+  border: 1px solid var(--mat-sys-outline-variant);
 }
 
 .timer-controls mat-form-field {
   width: 100%;
-}
-
-.timer-controls .mat-mdc-form-field {
-  background-color: white !important;
-}
-
-.timer-controls .mat-mdc-text-field-wrapper {
-  background-color: white !important;
 }
 
 .timer-buttons {
@@ -63,48 +58,44 @@
 }
 
 .validation-message {
-  background-color: #fff3cd;
-  border: 1px solid #ffeaa7;
+  background-color: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+  border: 1px solid var(--mat-sys-error);
   border-radius: 4px;
   padding: 12px 16px;
   margin-top: 16px;
 
   p {
     margin: 0;
-    color: #856404;
+    color: var(--mat-sys-on-error-container);
     font-size: 14px;
     font-weight: 500;
   }
 }
 
-// Ensure form fields have proper styling
+// Remove hardcoded styling - let Material handle theming
 ::ng-deep {
-  .mat-mdc-form-field {
-    .mat-mdc-text-field-wrapper {
-      background-color: white !important;
-    }
-
-    .mat-mdc-form-field-flex {
-      background-color: white !important;
-    }
-  }
+  // Form fields will use Material's automatic theming
 
   .mat-mdc-select-panel {
-    background-color: white !important;
-    border: 1px solid #e0e0e0 !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    // Let Material handle panel theming
+    background-color: var(--mat-sys-surface-container) !important;
+    border: 1px solid var(--mat-sys-outline-variant) !important;
+    box-shadow: 0 4px 12px var(--mat-sys-shadow) !important;
   }
 
   .mat-mdc-option {
-    background-color: white !important;
-    color: #333 !important;
+    // Let Material handle option theming
+    background-color: var(--mat-sys-surface-container) !important;
+    color: var(--mat-sys-on-surface) !important;
 
     &:hover {
-      background-color: #f5f5f5 !important;
+      background-color: var(--mat-sys-surface-container-high) !important;
     }
 
     &.mdc-list-item--selected {
-      background-color: #e3f2fd !important;
+      background-color: var(--mat-sys-primary-container) !important;
+      color: var(--mat-sys-on-primary-container) !important;
     }
   }
 }
