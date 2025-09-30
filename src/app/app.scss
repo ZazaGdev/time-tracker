@@ -1,90 +1,30 @@
-.sidenav-container {
-  height: 100vh;
+// Global App Styles
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.sidenav {
-  width: 280px;
-  background-color: #fff;
-  border-right: 1px solid #e0e0e0;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-}
-
-// App Branding
-.app-branding {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 24px 20px;
-  background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
-  color: white;
-  border-bottom: 1px solid #e0e0e0;
-
-  .app-logo {
-    .logo-icon {
-      font-size: 32px;
-      width: 32px;
-      height: 32px;
-    }
-  }
-
-  .app-name {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-  }
-}
-
-// Navigation Menu
-.nav-menu {
-  padding: 8px 0;
-
-  a[mat-list-item] {
-    margin: 4px 12px;
-    border-radius: 8px;
-    transition: all 0.2s ease-in-out;
-    color: #616161;
-
-    &:hover {
-      background-color: #f5f5f5;
-      color: #1976d2;
-    }
-
-    mat-icon {
-      color: inherit;
-    }
-
-    span {
-      font-weight: 500;
-    }
-  }
-}
-
-.active-nav-item {
-  background-color: #e3f2fd !important;
-  color: #1976d2 !important;
-
-  mat-icon {
-    color: #1976d2 !important;
-  }
-
-  span {
-    font-weight: 600 !important;
-  }
-}
-
-// Main Content Area
-.main-content {
+body {
+  font-family: 'Roboto', sans-serif;
   background-color: #fafafa;
+  overflow-x: hidden;
 }
 
+// Main App Container
+.app-container {
+  margin-left: 60px; // Default collapsed sidebar width
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+// Top Toolbar
 .top-toolbar {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-
-  .menu-button {
-    margin-right: 8px;
-  }
+  z-index: 100;
+  position: relative;
 
   .toolbar-title {
     font-weight: 500;
@@ -96,36 +36,50 @@
   }
 }
 
+// Main Content Area
 .page-content {
-  min-height: calc(100vh - 64px);
+  flex: 1;
+  padding: 0;
+  margin: 0;
   background-color: #fafafa;
+  min-height: calc(100vh - 64px);
+
+  // Full-screen content
+  :global(.mat-mdc-card) {
+    margin: 0;
+    border-radius: 0;
+  }
 }
 
-// Responsive Design
+// Responsive Design - Mobile
 @media (max-width: 768px) {
-  .sidenav {
-    width: 250px;
-  }
+  .app-container {
+    margin-left: 0; // No margin on mobile since sidebar overlays
 
-  .app-branding {
-    padding: 20px 16px;
-
-    .app-name {
-      font-size: 18px;
+    .top-toolbar {
+      padding-left: 16px;
     }
   }
 }
 
-@media (max-width: 480px) {
-  .sidenav {
-    width: 220px;
-  }
-
-  .app-branding {
-    padding: 16px 12px;
-
-    .app-name {
-      font-size: 16px;
+// Global sidebar state management
+:global(body) {
+  &.sidebar-expanded {
+    .app-container {
+      margin-left: 280px;
     }
   }
+
+  &.sidebar-collapsed {
+    .app-container {
+      margin-left: 60px;
+    }
+  }
+}
+
+// Smooth transitions for all elements
+* {
+  transition-property: margin-left, transform, width;
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }

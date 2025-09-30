@@ -1,5 +1,10 @@
+// Angular Core
 import { Injectable } from '@angular/core';
+
+// Application Data
 import { db } from '../data/db.service';
+
+// Application Models
 import { Category, Subcategory, Tag } from '../models';
 
 @Injectable({

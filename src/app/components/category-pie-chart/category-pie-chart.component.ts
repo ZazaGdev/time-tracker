@@ -1,8 +1,17 @@
+// Angular Core
 import { Component, Input, OnInit, signal, effect } from '@angular/core';
+
+// Angular Common
 import { CommonModule } from '@angular/common';
+
+// Angular Material
 import { MatCardModule } from '@angular/material/card';
+
+// Third-party Libraries (temporarily disabled)
 // import { BaseChartDirective } from 'ng2-charts';
 // import { ChartConfiguration, ChartOptions } from 'chart.js';
+
+// Application Services
 import { ReportService, TaxonomyService } from '../../core/services';
 import { ReportPeriod } from '../../core/services/report.service';
 
@@ -16,7 +25,13 @@ export interface PieChartData {
 @Component({
   selector: 'app-category-pie-chart',
   standalone: true,
-  imports: [CommonModule, MatCardModule],
+  imports: [
+    // Angular Common
+    CommonModule,
+
+    // Angular Material
+    MatCardModule,
+  ],
   template: `
     <mat-card class="pie-chart-card">
       <mat-card-header>

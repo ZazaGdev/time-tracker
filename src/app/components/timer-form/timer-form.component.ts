@@ -1,21 +1,35 @@
+// Angular Core
 import { Component, OnInit, signal } from '@angular/core';
+
+// Angular Common
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
+// Angular Material
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialog } from '@angular/material/dialog';
+
+// Application Services
 import { TimerService, TaxonomyService } from '../../core/services';
+
+// Application Models
 import { Category, Subcategory, Tag } from '../../core/models';
+
+// Application Data
 import { seedSampleData } from '../../core/data';
 
 @Component({
   selector: 'app-timer-form',
   standalone: true,
   imports: [
+    // Angular Common
     CommonModule,
     FormsModule,
+
+    // Angular Material
     MatSelectModule,
     MatChipsModule,
     MatButtonModule,

@@ -1,0 +1,67 @@
+.hours-chart-card {
+  margin-bottom: 24px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filters-container {
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.date-filters {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  mat-form-field {
+    min-width: 200px;
+  }
+}
+
+.quick-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  button {
+    border: 1px solid #ddd;
+  }
+}
+
+.chart-container {
+  width: 100%;
+  height: 400px;
+  position: relative;
+}
+
+.no-data,
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+
+  p {
+    margin: 0;
+    font-size: 16px;
+  }
+}
+
+.loading {
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .date-filters,
+  .quick-filters {
+    flex-direction: column;
+  }
+
+  .date-filters mat-form-field {
+    min-width: unset;
+    width: 100%;
+  }
+}

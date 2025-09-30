@@ -1,6 +1,11 @@
+// Angular Core
 import { Component, OnInit, signal, ElementRef, ViewChild } from '@angular/core';
+
+// Angular Common
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
+// Angular Material
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
@@ -10,16 +15,23 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+// Application Services
 import { TaxonomyService } from '../../core/services';
-import { Category, Subcategory, Tag, Session, ActiveTimer } from '../../core/models';
 import { db } from '../../core/data/db.service';
+
+// Application Models
+import { Category, Subcategory, Tag, Session, ActiveTimer } from '../../core/models';
 
 @Component({
   selector: 'app-manage-page',
   standalone: true,
   imports: [
+    // Angular Common
     CommonModule,
     FormsModule,
+
+    // Angular Material
     MatInputModule,
     MatButtonModule,
     MatSelectModule,

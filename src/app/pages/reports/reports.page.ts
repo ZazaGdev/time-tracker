@@ -1,12 +1,19 @@
+// Angular Core
 import { Component, OnInit, signal, computed, ViewChild } from '@angular/core';
+
+// Angular Common
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
+// Angular Material
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+
+// Application Services
 import { ReportService, TaxonomyService } from '../../core/services';
 import {
   DayTotals,
@@ -14,8 +21,12 @@ import {
   ChartData,
   ReportPeriod,
 } from '../../core/services/report.service';
+
+// Application Components
 import { HoursChartComponent } from '../../components/hours-chart/hours-chart.component';
 // import { CategoryPieChartComponent } from '../../components/category-pie-chart/category-pie-chart.component'; // Temporarily disabled
+
+// Application Models
 import { Category, Subcategory, Tag } from '../../core/models';
 
 interface ReportRow {

@@ -1,14 +1,33 @@
+// Angular Core
 import { Component, OnInit } from '@angular/core';
+
+// Angular Common
 import { CommonModule } from '@angular/common';
+
+// Angular Material
 import { MatCardModule } from '@angular/material/card';
+
+// Application Components
 import { TimerFormComponent } from '../../components/timer-form/timer-form.component';
 import { HoursChartComponent } from '../../components/hours-chart/hours-chart.component';
+
+// Application Services
 import { TimerService } from '../../core/services';
 
 @Component({
   selector: 'app-timer-page',
   standalone: true,
-  imports: [CommonModule, MatCardModule, TimerFormComponent, HoursChartComponent],
+  imports: [
+    // Angular Common
+    CommonModule,
+
+    // Angular Material
+    MatCardModule,
+
+    // Application Components
+    TimerFormComponent,
+    HoursChartComponent,
+  ],
   template: `
     <div class="timer-page">
       <!-- Timer Controls -->

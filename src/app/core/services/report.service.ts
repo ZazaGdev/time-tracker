@@ -1,4 +1,7 @@
+// Angular Core
 import { Injectable } from '@angular/core';
+
+// Third-party Libraries
 import {
   startOfDay,
   endOfDay,
@@ -8,7 +11,11 @@ import {
   endOfMonth,
   eachDayOfInterval,
 } from 'date-fns';
+
+// Application Data
 import { db } from '../data/db.service';
+
+// Application Models
 import { Session } from '../models';
 
 export interface DayTotals {

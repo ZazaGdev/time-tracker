@@ -1,0 +1,31 @@
+<div class="sidebar" [class.expanded]="isExpanded()">
+  <!-- App Branding / Toggle Area -->
+  <div class="sidebar-header" (click)="toggleSidebar()">
+    <div class="app-logo">
+      <mat-icon class="logo-icon">schedule</mat-icon>
+    </div>
+    <div class="app-info" *ngIf="isExpanded()">
+      <h2 class="app-name">Trackie</h2>
+      <p class="app-subtitle">Time Tracker</p>
+    </div>
+    <div class="toggle-indicator" *ngIf="isExpanded()">
+      <mat-icon class="toggle-icon">chevron_left</mat-icon>
+    </div>
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="sidebar-nav">
+    <a
+      *ngFor="let item of navigationItems"
+      [routerLink]="item.path"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: !!item.exact }"
+      class="nav-item"
+      [matTooltip]="!isExpanded() ? item.label : ''"
+      matTooltipPosition="right"
+    >
+      <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+      <span class="nav-label" *ngIf="isExpanded()">{{ item.label }}</span>
+    </a>
+  </nav>
+</div>

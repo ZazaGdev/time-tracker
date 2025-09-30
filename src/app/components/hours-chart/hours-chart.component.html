@@ -1,0 +1,67 @@
+<mat-card class="hours-chart-card">
+  <mat-card-header>
+    <mat-card-title>Hours by Date and Category</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <!-- Date Range Filters -->
+    <div class="filters-container">
+      <div class="date-filters">
+        <mat-form-field appearance="outline">
+          <mat-label>Start Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="startPicker"
+            [(ngModel)]="startDate"
+            (ngModelChange)="onDateRangeChange()"
+          />
+          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>End Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="endPicker"
+            [(ngModel)]="endDate"
+            (ngModelChange)="onDateRangeChange()"
+          />
+          <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="quick-filters">
+        <button mat-button (click)="setQuickRange('thisWeek')">This Week</button>
+        <button mat-button (click)="setQuickRange('lastWeek')">Last Week</button>
+        <button mat-button (click)="setQuickRange('last2weeks')">Last 2 Weeks</button>
+        <button mat-button (click)="setQuickRange('lastMonth')">Last Month</button>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="chart-container">
+      <apx-chart
+        #chart
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [xaxis]="chartOptions.xaxis"
+        [yaxis]="chartOptions.yaxis"
+        [dataLabels]="chartOptions.dataLabels"
+        [plotOptions]="chartOptions.plotOptions"
+        [legend]="chartOptions.legend"
+        [fill]="chartOptions.fill"
+        [tooltip]="chartOptions.tooltip"
+        [stroke]="chartOptions.stroke"
+        [colors]="chartOptions.colors"
+      ></apx-chart>
+    </div>
+
+    <div class="no-data" *ngIf="!loading() && chartData().length === 0">
+      <p>No data available for the selected period.</p>
+    </div>
+    <div class="loading" *ngIf="loading()">
+      <p>Loading chart data...</p>
+    </div>
+  </mat-card-content>
+</mat-card>

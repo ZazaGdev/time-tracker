@@ -1,5 +1,10 @@
+// Angular Core
 import { Injectable, signal } from '@angular/core';
+
+// Application Data
 import { db } from '../data/db.service';
+
+// Application Models
 import { ActiveTimer, Session } from '../models';
 
 @Injectable({

@@ -1,13 +1,20 @@
+// Angular Core
 import { Component, OnInit, signal, ViewChild } from '@angular/core';
+
+// Angular Common
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+// Angular Material
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
+
+// Third-party Libraries
 import { NgApexchartsModule, ChartComponent } from 'ng-apexcharts';
-import { FormsModule } from '@angular/forms';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -20,9 +27,13 @@ import {
   ApexTooltip,
   ApexStroke,
 } from 'ng-apexcharts';
+import { startOfWeek, endOfWeek, subWeeks, format } from 'date-fns';
+
+// Application Services
 import { ReportService, TaxonomyService } from '../../core/services';
 import { StackedChartData, DateRangeFilter } from '../../core/services/report.service';
-import { startOfWeek, endOfWeek, subWeeks, format, addDays } from 'date-fns';
+
+// Application Models
 import { Category } from '../../core/models';
 
 export interface ChartOptions {
@@ -43,166 +54,34 @@ export interface ChartOptions {
   selector: 'app-hours-chart',
   standalone: true,
   imports: [
+    // Angular Common
     CommonModule,
+    FormsModule,
+
+    // Angular Material
     MatCardModule,
     MatButtonModule,
     MatDatepickerModule,
     MatFormFieldModule,
     MatInputModule,
     MatNativeDateModule,
+
+    // Third-party
     NgApexchartsModule,
-    FormsModule,
   ],
-  template: `
-    <mat-card class="hours-chart-card">
-      <mat-card-header>
-        <mat-card-title>Hours by Date and Category</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <!-- Date Range Filters -->
-        <div class="filters-container">
-          <div class="date-filters">
-            <mat-form-field appearance="outline">
-              <mat-label>Start Date</mat-label>
-              <input
-                matInput
-                [matDatepicker]="startPicker"
-                [(ngModel)]="startDate"
-                (ngModelChange)="onDateRangeChange()"
-              />
-              <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-              <mat-datepicker #startPicker></mat-datepicker>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>End Date</mat-label>
-              <input
-                matInput
-                [matDatepicker]="endPicker"
-                [(ngModel)]="endDate"
-                (ngModelChange)="onDateRangeChange()"
-              />
-              <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-              <mat-datepicker #endPicker></mat-datepicker>
-            </mat-form-field>
-          </div>
-
-          <div class="quick-filters">
-            <button mat-button (click)="setQuickRange('thisWeek')">This Week</button>
-            <button mat-button (click)="setQuickRange('lastWeek')">Last Week</button>
-            <button mat-button (click)="setQuickRange('last2weeks')">Last 2 Weeks</button>
-            <button mat-button (click)="setQuickRange('lastMonth')">Last Month</button>
-          </div>
-        </div>
-
-        <!-- Chart -->
-        <div class="chart-container">
-          <apx-chart
-            #chart
-            [series]="chartOptions.series"
-            [chart]="chartOptions.chart"
-            [xaxis]="chartOptions.xaxis"
-            [yaxis]="chartOptions.yaxis"
-            [dataLabels]="chartOptions.dataLabels"
-            [plotOptions]="chartOptions.plotOptions"
-            [legend]="chartOptions.legend"
-            [fill]="chartOptions.fill"
-            [tooltip]="chartOptions.tooltip"
-            [stroke]="chartOptions.stroke"
-            [colors]="chartOptions.colors"
-          ></apx-chart>
-        </div>
-
-        <div class="no-data" *ngIf="!loading() && chartData().length === 0">
-          <p>No data available for the selected period.</p>
-        </div>
-        <div class="loading" *ngIf="loading()">
-          <p>Loading chart data...</p>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  `,
-  styles: [
-    `
-      .hours-chart-card {
-        margin-bottom: 24px;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      }
-
-      .filters-container {
-        margin-bottom: 24px;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-      }
-
-      .date-filters {
-        display: flex;
-        gap: 16px;
-        flex-wrap: wrap;
-
-        mat-form-field {
-          min-width: 200px;
-        }
-      }
-
-      .quick-filters {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-
-        button {
-          border: 1px solid #ddd;
-        }
-      }
-
-      .chart-container {
-        width: 100%;
-        height: 400px;
-        position: relative;
-      }
-
-      .no-data,
-      .loading {
-        text-align: center;
-        padding: 40px;
-        color: #666;
-
-        p {
-          margin: 0;
-          font-size: 16px;
-        }
-      }
-
-      .loading {
-        font-style: italic;
-      }
-
-      @media (max-width: 768px) {
-        .date-filters,
-        .quick-filters {
-          flex-direction: column;
-        }
-
-        .date-filters mat-form-field {
-          min-width: unset;
-          width: 100%;
-        }
-      }
-    `,
-  ],
+  templateUrl: './hours-chart.component.html',
+  styleUrls: ['./hours-chart.component.scss'],
 })
 export class HoursChartComponent implements OnInit {
   @ViewChild('chart', { static: false }) chart: ChartComponent | undefined;
 
+  // Component state
   startDate: Date = new Date();
   endDate: Date = new Date();
-
   chartData = signal<StackedChartData[]>([]);
   loading = signal<boolean>(false);
 
+  // Chart configuration
   chartOptions: ChartOptions = {
     series: [],
     chart: {

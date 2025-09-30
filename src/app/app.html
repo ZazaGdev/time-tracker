@@ -1,58 +1,16 @@
-<mat-sidenav-container class="sidenav-container">
-  <!-- Sidebar -->
-  <mat-sidenav #sidenav mode="side" [opened]="sidenavOpened()" class="sidenav">
-    <!-- App Branding -->
-    <div class="app-branding">
-      <div class="app-logo">
-        <mat-icon class="logo-icon">schedule</mat-icon>
-      </div>
-      <h2 class="app-name">{{ title() }}</h2>
-    </div>
+<!-- Custom Sidebar -->
+<app-sidebar></app-sidebar>
 
-    <!-- Navigation Menu -->
-    <mat-nav-list class="nav-menu">
-      <a
-        mat-list-item
-        routerLink="/"
-        routerLinkActive="active-nav-item"
-        [routerLinkActiveOptions]="{ exact: true }"
-      >
-        <mat-icon matListItemIcon>timer</mat-icon>
-        <span matListItemTitle>Home</span>
-      </a>
+<!-- Main Application Container -->
+<div class="app-container">
+  <!-- Top Toolbar -->
+  <mat-toolbar color="primary" class="top-toolbar">
+    <span class="toolbar-title">{{ title() }}</span>
+    <span class="toolbar-spacer"></span>
+  </mat-toolbar>
 
-      <a mat-list-item routerLink="/manage" routerLinkActive="active-nav-item">
-        <mat-icon matListItemIcon>settings</mat-icon>
-        <span matListItemTitle>Manage</span>
-      </a>
-
-      <a mat-list-item routerLink="/reports" routerLinkActive="active-nav-item">
-        <mat-icon matListItemIcon>assessment</mat-icon>
-        <span matListItemTitle>Reports</span>
-      </a>
-    </mat-nav-list>
-  </mat-sidenav>
-
-  <!-- Main Content -->
-  <mat-sidenav-content class="main-content">
-    <!-- Top Toolbar -->
-    <mat-toolbar color="primary" class="top-toolbar">
-      <button
-        mat-icon-button
-        (click)="toggleSidenav()"
-        class="menu-button"
-        aria-label="Toggle navigation"
-      >
-        <mat-icon>menu</mat-icon>
-      </button>
-
-      <span class="toolbar-title">{{ title() }}</span>
-      <span class="toolbar-spacer"></span>
-    </mat-toolbar>
-
-    <!-- Router Content -->
-    <main class="page-content">
-      <router-outlet />
-    </main>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  <!-- Router Content -->
+  <main class="page-content">
+    <router-outlet />
+  </main>
+</div>
