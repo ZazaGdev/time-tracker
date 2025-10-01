@@ -1,24 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
 
-// Import Angular Material with new v19 syntax
+// Import Angular Material theme with new Material 3 syntax
 @use '@angular/material' as mat;
 
-// Apply the new Material 3 theme using the recommended approach
-html {
-  // Set color-scheme to enable automatic light/dark switching
-  color-scheme: light dark;
+@include mat.core();
 
-  // Apply the theme using the new mat.theme mixin
-  @include mat.theme(
-    (
-      color: mat.$azure-palette,
-      typography: Roboto,
-      density: 0,
-    )
-  );
-}
+// Define a light theme
+$light-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+  )
+);
 
-// Global styles using Material's system variables
+// Apply the theme to Angular Material
+@include mat.all-component-themes($light-theme);
+
+// Global styles
 html,
 body {
   height: 100%;
@@ -26,44 +27,14 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
-// Use Material's system variables for consistent theming
-body {
-  background: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-}
-
-// Material icons should inherit color properly
-.mat-icon {
-  color: inherit;
-}
-
-// Ensure Material form fields use proper theming
+// Fix for transparent dropdowns and form fields
 .mat-mdc-form-field {
-  // Let Material handle all theming through design tokens
-  --mdc-filled-text-field-container-color: var(--mat-sys-surface-container);
-  --mdc-filled-text-field-label-text-color: var(--mat-sys-on-surface-variant);
-  --mdc-filled-text-field-input-text-color: var(--mat-sys-on-surface);
-  --mdc-outlined-text-field-outline-color: var(--mat-sys-outline);
-  --mdc-outlined-text-field-label-text-color: var(--mat-sys-on-surface-variant);
-  --mdc-outlined-text-field-input-text-color: var(--mat-sys-on-surface);
+  background-color: transparent !important;
 }
 
-// Ensure select panels use proper theming
 .mat-mdc-select-panel {
-  background: var(--mat-sys-surface-container) !important;
-  border: 1px solid var(--mat-sys-outline-variant) !important;
+  background-color: white !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
 }
 
-// Ensure options use proper theming
-.mat-mdc-option {
-  color: var(--mat-sys-on-surface) !important;
-
-  &:hover {
-    background: var(--mat-sys-surface-container-high) !important;
-  }
-
-  &.mdc-list-item--selected {
-    background: var(--mat-sys-primary-container) !important;
-    color: var(--mat-sys-on-primary-container) !important;
-  }
-}
+// Additional global styles can be added here if needed

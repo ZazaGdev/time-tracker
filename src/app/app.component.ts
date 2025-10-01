@@ -15,9 +15,6 @@ import { MatIconModule } from '@angular/material/icon';
 // Custom Components
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 
-// Services
-import { ThemeService } from './core/services/theme.service';
-
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -42,7 +39,5 @@ import { ThemeService } from './core/services/theme.service';
 export class AppComponent {
   title = signal('Trackie');
 
-  constructor(private themeService: ThemeService) {
-    // ThemeService constructor will run immediately, initializing theme
-  }
+  constructor() {}
 }

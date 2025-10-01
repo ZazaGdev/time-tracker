@@ -32,7 +32,7 @@ import {
 import { startOfWeek, endOfWeek, subWeeks, format } from 'date-fns';
 
 // Application Services
-import { ReportService, TaxonomyService, ThemeService } from '../../core/services';
+import { ReportService, TaxonomyService } from '../../core/services';
 import { StackedChartData, DateRangeFilter } from '../../core/services/report.service';
 
 // Application Models
@@ -169,22 +169,9 @@ export class HoursChartComponent implements OnInit {
     },
   };
 
-  constructor(
-    private reportService: ReportService,
-    private taxonomyService: TaxonomyService,
-    private themeService: ThemeService
-  ) {
+  constructor(private reportService: ReportService, private taxonomyService: TaxonomyService) {
     // Set default date range to this week
     this.setQuickRange('thisWeek');
-
-    // Initialize theme immediately
-    this.initializeChartTheme();
-
-    // Subscribe to theme changes using Angular effect
-    effect(() => {
-      // This effect will run whenever effectiveTheme changes
-      this.updateChartTheme();
-    });
   }
 
   ngOnInit(): void {
@@ -313,36 +300,6 @@ export class HoursChartComponent implements OnInit {
     await this.loadChartData();
   }
 
-  // Initialize chart theme on component creation
-  private initializeChartTheme(): void {
-    const effectiveTheme = this.themeService.effectiveTheme();
-    const isDark = effectiveTheme === 'dark';
-
-    // Apply initial theme to chartOptions
-    this.chartOptions.theme = {
-      mode: (isDark ? 'dark' : 'light') as 'dark' | 'light',
-      palette: 'palette1' as any,
-    };
-    this.chartOptions.colors = isDark ? this.getDarkModeColors() : this.getLightModeColors();
-    this.chartOptions.grid = this.getGridTheme(isDark);
-  }
-
-  // Get dark mode colors
-  private getDarkModeColors(): string[] {
-    return [
-      '#BB86FC', // Material Purple 200
-      '#03DAC6', // Material Teal 200
-      '#CF6679', // Material Pink 200
-      '#F2B8B5', // Material Red 200
-      '#4DABF7', // Material Blue 200
-      '#69DB7C', // Material Green 200
-      '#FFD54F', // Material Yellow 200
-      '#FFAB91', // Material Orange 200
-      '#B39DDB', // Material Deep Purple 200
-      '#81C784', // Material Light Green 200
-    ];
-  }
-
   // Get light mode colors
   private getLightModeColors(): string[] {
     return [
@@ -378,64 +335,5 @@ export class HoursChartComponent implements OnInit {
         },
       },
     };
-  }
-
-  // Update chart theme based on current Material theme
-  private updateChartTheme(): void {
-    const effectiveTheme = this.themeService.effectiveTheme();
-    const isDark = effectiveTheme === 'dark';
-
-    // Create comprehensive theme options
-    const themeOptions = {
-      theme: {
-        mode: (isDark ? 'dark' : 'light') as 'dark' | 'light',
-        palette: 'palette1' as any,
-      },
-      colors: isDark ? this.getDarkModeColors() : this.getLightModeColors(),
-      grid: this.getGridTheme(isDark),
-      xaxis: {
-        ...this.chartOptions.xaxis,
-        labels: {
-          style: {
-            colors: isDark ? '#E0E0E0' : '#424242',
-          },
-        },
-        title: {
-          ...this.chartOptions.xaxis.title,
-          style: {
-            color: isDark ? '#E0E0E0' : '#424242',
-          },
-        },
-      },
-      yaxis: {
-        ...this.chartOptions.yaxis,
-        labels: {
-          ...this.chartOptions.yaxis.labels,
-          style: {
-            colors: isDark ? '#E0E0E0' : '#424242',
-          },
-        },
-        title: {
-          ...this.chartOptions.yaxis.title,
-          style: {
-            color: isDark ? '#E0E0E0' : '#424242',
-          },
-        },
-      },
-      legend: {
-        ...this.chartOptions.legend,
-        labels: {
-          colors: isDark ? '#E0E0E0' : '#424242',
-        },
-      },
-    };
-
-    // Update chart options
-    Object.assign(this.chartOptions, themeOptions);
-
-    // Update the chart if it exists
-    if (this.chart) {
-      this.chart.updateOptions(themeOptions, true);
-    }
   }
 }

@@ -56,11 +56,6 @@ export class SidebarComponent {
       icon: 'assessment',
       label: 'Reports',
     },
-    {
-      path: '/settings',
-      icon: 'palette',
-      label: 'Settings',
-    },
   ];
 
   constructor() {

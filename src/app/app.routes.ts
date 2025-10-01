@@ -13,9 +13,6 @@ export const routes: Routes = [
     path: 'reports',
     loadComponent: () => import('./pages/reports/reports.page').then((m) => m.ReportsPage),
   },
-  {
-    path: 'settings',
-    loadComponent: () => import('./pages/settings/settings.page').then((m) => m.SettingsPage),
-  },
+
   { path: '**', redirectTo: '' },
 ];

@@ -1,29 +1,29 @@
 .timer-page {
   padding: 20px;
-  background-color: var(--mat-sys-surface-container-low);
+  background-color: #fafafa;
   min-height: calc(100vh - 64px);
-  color: var(--mat-sys-on-surface);
+  color: #212121;
 }
 
 .timer-page h1 {
-  color: var(--mat-sys-on-surface);
+  color: #212121;
   margin-bottom: 24px;
   font-weight: 400;
 }
 
 .active-timer-status {
-  background-color: var(--mat-sys-primary-container);
-  color: var(--mat-sys-on-primary-container);
+  background-color: #e3f2fd;
+  color: #1565c0;
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 24px;
-  border-left: 4px solid var(--mat-sys-primary);
-  box-shadow: 0 2px 4px var(--mat-sys-shadow);
+  border-left: 4px solid #1976d2;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .active-timer-status h2 {
   margin: 0;
-  color: var(--mat-sys-on-primary-container);
+  color: #1565c0;
   font-size: 18px;
   font-weight: 500;
 }
@@ -32,12 +32,12 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
+  background-color: #ffffff;
+  color: #212121;
   padding: 24px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px var(--mat-sys-shadow);
-  border: 1px solid var(--mat-sys-outline-variant);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
 }
 
 .timer-controls mat-form-field {
@@ -58,45 +58,18 @@
 }
 
 .validation-message {
-  background-color: var(--mat-sys-error-container);
-  color: var(--mat-sys-on-error-container);
-  border: 1px solid var(--mat-sys-error);
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef5350;
   border-radius: 4px;
   padding: 12px 16px;
   margin-top: 16px;
 
   p {
     margin: 0;
-    color: var(--mat-sys-on-error-container);
+    color: #c62828;
     font-size: 14px;
     font-weight: 500;
-  }
-}
-
-// Remove hardcoded styling - let Material handle theming
-::ng-deep {
-  // Form fields will use Material's automatic theming
-
-  .mat-mdc-select-panel {
-    // Let Material handle panel theming
-    background-color: var(--mat-sys-surface-container) !important;
-    border: 1px solid var(--mat-sys-outline-variant) !important;
-    box-shadow: 0 4px 12px var(--mat-sys-shadow) !important;
-  }
-
-  .mat-mdc-option {
-    // Let Material handle option theming
-    background-color: var(--mat-sys-surface-container) !important;
-    color: var(--mat-sys-on-surface) !important;
-
-    &:hover {
-      background-color: var(--mat-sys-surface-container-high) !important;
-    }
-
-    &.mdc-list-item--selected {
-      background-color: var(--mat-sys-primary-container) !important;
-      color: var(--mat-sys-on-primary-container) !important;
-    }
   }
 }
 

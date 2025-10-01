@@ -4,8 +4,12 @@
   left: 0;
   height: 100vh;
   width: 60px;
-  background: linear-gradient(135deg, var(--sidebar-gradient-start) 0%, var(--sidebar-gradient-end) 100%);
-  box-shadow: 2px 0 8px var(--shadow-color-strong);
+  background: linear-gradient(
+    135deg,
+    var(--sidebar-gradient-start) 0%,
+    var(--sidebar-gradient-end) 100%
+  );
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   z-index: 1000;
@@ -27,10 +31,11 @@
   gap: 15px;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  
+
   &:hover {
     background: var(--sidebar-hover);
-  }  .app-logo {
+  }
+  .app-logo {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -114,7 +119,7 @@
     &.active {
       background: var(--sidebar-active);
       color: var(--sidebar-text);
-      box-shadow: 0 2px 8px var(--shadow-color-strong);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 
       &::before {
         content: '';

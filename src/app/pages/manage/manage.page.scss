@@ -1,12 +1,12 @@
 .manage-page {
   padding: 20px;
-  background-color: var(--mat-sys-surface-container-low);
-  color: var(--mat-sys-on-surface);
+  background-color: #fafafa;
+  color: #212121;
   min-height: calc(100vh - 64px);
 }
 
 .manage-page h1 {
-  color: var(--mat-sys-on-surface);
+  color: #212121;
   margin-bottom: 32px;
   font-weight: 400;
   text-align: center;
@@ -19,20 +19,20 @@
 }
 
 .export-import-card {
-  background: var(--mat-sys-surface);
+  background: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 2px 8px var(--mat-sys-shadow);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 24px;
-  border: 1px solid var(--mat-sys-outline-variant);
+  border: 1px solid #e0e0e0;
 
   mat-card-header {
-    background-color: var(--mat-sys-primary-container);
+    background-color: #e3f2fd;
     margin: -16px -16px 16px -16px;
     padding: 16px;
     border-radius: 8px 8px 0 0;
 
     mat-card-title {
-      color: var(--mat-sys-on-primary-container);
+      color: #1565c0;
       font-size: 18px;
       font-weight: 500;
       margin: 0;
@@ -73,18 +73,18 @@
         }
 
         &.clear-data-btn {
-          background-color: var(--mat-sys-error) !important;
-          color: var(--mat-sys-on-error) !important;
-          border: 2px solid var(--mat-sys-error-container);
+          background-color: #d32f2f !important;
+          color: #ffffff !important;
+          border: 2px solid #ffcdd2;
 
           &:hover:not([disabled]) {
-            background-color: var(--mat-sys-error-container) !important;
-            color: var(--mat-sys-on-error-container) !important;
+            background-color: #ffcdd2 !important;
+            color: #d32f2f !important;
           }
 
           &[disabled] {
-            background-color: var(--mat-sys-surface-variant) !important;
-            color: var(--mat-sys-on-surface-variant) !important;
+            background-color: #f5f5f5 !important;
+            color: #9e9e9e !important;
           }
         }
       }
@@ -99,20 +99,20 @@
     .action-description {
       margin: 0;
       font-size: 13px;
-      color: var(--mat-sys-on-surface-variant);
+      color: #9e9e9e;
       line-height: 1.4;
 
       strong {
-        color: var(--mat-sys-primary);
+        color: #1976d2;
         font-weight: 600;
       }
 
       &.clear-warning {
-        color: var(--mat-sys-error);
+        color: #d32f2f;
         font-weight: 500;
 
         strong {
-          color: var(--mat-sys-error);
+          color: #d32f2f;
         }
       }
     }
@@ -124,10 +124,10 @@
 }
 
 .section-card {
-  background: var(--mat-sys-surface);
+  background: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 2px 8px var(--mat-sys-shadow);
-  border: 1px solid var(--mat-sys-outline-variant);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
 
   mat-card-header {
     background-color: var(--mat-sys-surface-container);
@@ -136,7 +136,7 @@
     border-radius: 8px 8px 0 0;
 
     mat-card-title {
-      color: var(--mat-sys-on-surface);
+      color: #212121;
       font-size: 18px;
       font-weight: 500;
       margin: 0;
@@ -150,7 +150,7 @@
   gap: 16px;
   margin-bottom: 24px;
   padding: 16px;
-  background-color: var(--mat-sys-surface-container-low);
+  background-color: #fafafa;
   border-radius: 8px;
 
   mat-form-field {
@@ -170,7 +170,7 @@
 
   .no-items {
     text-align: center;
-    color: var(--mat-sys-on-surface-variant);
+    color: #9e9e9e;
     font-style: italic;
     margin: 32px 0;
   }
@@ -179,7 +179,7 @@
     padding: 0;
 
     mat-list-item {
-      border-bottom: 1px solid var(--mat-sys-outline-variant);
+      border-bottom: 1px solid #e0e0e0;
 
       &:last-child {
         border-bottom: none;
@@ -202,7 +202,7 @@
 
 .item-name {
   font-weight: 500;
-  color: var(--mat-sys-on-surface);
+  color: #212121;
   font-size: 16px;
 }
 
@@ -217,7 +217,7 @@
 
   .parent-category {
     font-size: 12px;
-    color: var(--mat-sys-on-surface-variant);
+    color: #9e9e9e;
     font-weight: 400;
 
     &::before {
