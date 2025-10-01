@@ -17,10 +17,9 @@
             [disabled]="isExporting()"
           >
             @if (!isExporting()) {
-              <mat-icon>download</mat-icon>
-            }
-            @if (isExporting()) {
-              <mat-spinner diameter="20"></mat-spinner>
+            <mat-icon>download</mat-icon>
+            } @if (isExporting()) {
+            <mat-spinner diameter="20"></mat-spinner>
             }
             {{ isExporting() ? 'Exporting...' : 'Export Data' }}
           </button>
@@ -38,10 +37,9 @@
             [disabled]="isImporting()"
           >
             @if (!isImporting()) {
-              <mat-icon>upload</mat-icon>
-            }
-            @if (isImporting()) {
-              <mat-spinner diameter="20"></mat-spinner>
+            <mat-icon>upload</mat-icon>
+            } @if (isImporting()) {
+            <mat-spinner diameter="20"></mat-spinner>
             }
             {{ isImporting() ? 'Importing...' : 'Import Data' }}
           </button>
@@ -71,10 +69,9 @@
               [disabled]="isSeedingDemo()"
             >
               @if (!isSeedingDemo()) {
-                <mat-icon>science</mat-icon>
-              }
-              @if (isSeedingDemo()) {
-                <mat-spinner diameter="20"></mat-spinner>
+              <mat-icon>science</mat-icon>
+              } @if (isSeedingDemo()) {
+              <mat-spinner diameter="20"></mat-spinner>
               }
               {{ isSeedingDemo() ? 'Seeding...' : 'Simple Demo' }}
             </button>
@@ -86,10 +83,9 @@
               [disabled]="isSeedingDemo()"
             >
               @if (!isSeedingDemo()) {
-                <mat-icon>analytics</mat-icon>
-              }
-              @if (isSeedingDemo()) {
-                <mat-spinner diameter="20"></mat-spinner>
+              <mat-icon>analytics</mat-icon>
+              } @if (isSeedingDemo()) {
+              <mat-spinner diameter="20"></mat-spinner>
               }
               {{ isSeedingDemo() ? 'Seeding...' : 'Complex Demo' }}
             </button>
@@ -101,9 +97,9 @@
               [disabled]="isSeedingDemo()"
             >
               @if (!isSeedingDemo()) {
-                <mat-icon>calendar_view_month</mat-icon>
+              <mat-icon>calendar_view_month</mat-icon>
               } @else {
-                <mat-spinner diameter="20"></mat-spinner>
+              <mat-spinner diameter="20"></mat-spinner>
               }
               {{ isSeedingDemo() ? 'Seeding...' : '6-Month Comprehensive' }}
             </button>
@@ -116,9 +112,9 @@
               class="clear-data-btn"
             >
               @if (!isSeedingDemo()) {
-                <mat-icon>delete_forever</mat-icon>
+              <mat-icon>delete_forever</mat-icon>
               } @else {
-                <mat-spinner diameter="20"></mat-spinner>
+              <mat-spinner diameter="20"></mat-spinner>
               }
               {{ isSeedingDemo() ? 'Clearing...' : 'Clear All Data' }}
             </button>
@@ -175,23 +171,23 @@
         <!-- Categories List -->
         <div class="items-list">
           @if (categories().length === 0) {
-            <p class="no-items">No categories yet. Add one above.</p>
+          <p class="no-items">No categories yet. Add one above.</p>
           } @else {
-            <mat-list>
-              @for (category of categories(); track category.id) {
-                <mat-list-item class="list-item">
-                  <span class="item-name">{{ category.name }}</span>
-                  <button
-                    mat-icon-button
-                    color="warn"
-                    (click)="deleteCategory(category)"
-                    class="delete-btn"
-                  >
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </mat-list-item>
-              }
-            </mat-list>
+          <mat-list>
+            @for (category of categories(); track category.id) {
+            <mat-list-item class="list-item">
+              <span class="item-name">{{ category.name }}</span>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="deleteCategory(category)"
+                class="delete-btn"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-list-item>
+            }
+          </mat-list>
           }
         </div>
       </mat-card-content>
@@ -209,9 +205,9 @@
             <mat-label>Parent Category</mat-label>
             <mat-select [(value)]="selectedCategoryId">
               @for (category of categories(); track category.id) {
-                <mat-option [value]="category.id">
-                  {{ category.name }}
-                </mat-option>
+              <mat-option [value]="category.id">
+                {{ category.name }}
+              </mat-option>
               }
             </mat-select>
           </mat-form-field>
@@ -239,28 +235,26 @@
         <!-- Subcategories List -->
         <div class="items-list">
           @if (subcategories().length === 0) {
-            <p class="no-items">No subcategories yet. Add one above.</p>
+          <p class="no-items">No subcategories yet. Add one above.</p>
           } @else {
-            <mat-list>
-              @for (subcategory of subcategories(); track subcategory.id) {
-                <mat-list-item class="list-item">
-                  <div class="subcategory-info">
-                    <span class="item-name">{{ subcategory.name }}</span>
-                    <span class="parent-category">{{
-                      getCategoryName(subcategory.categoryId)
-                    }}</span>
-                  </div>
-                  <button
-                    mat-icon-button
-                    color="warn"
-                    (click)="deleteSubcategory(subcategory)"
-                    class="delete-btn"
-                  >
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </mat-list-item>
-              }
-            </mat-list>
+          <mat-list>
+            @for (subcategory of subcategories(); track subcategory.id) {
+            <mat-list-item class="list-item">
+              <div class="subcategory-info">
+                <span class="item-name">{{ subcategory.name }}</span>
+                <span class="parent-category">{{ getCategoryName(subcategory.categoryId) }}</span>
+              </div>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="deleteSubcategory(subcategory)"
+                class="delete-btn"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-list-item>
+            }
+          </mat-list>
           }
         </div>
       </mat-card-content>
@@ -296,18 +290,18 @@
         <!-- Tags List -->
         <div class="items-list">
           @if (tags().length === 0) {
-            <p class="no-items">No tags yet. Add one above.</p>
+          <p class="no-items">No tags yet. Add one above.</p>
           } @else {
-            <mat-list>
-              @for (tag of tags(); track tag.id) {
-                <mat-list-item class="list-item">
-                  <span class="item-name">{{ tag.name }}</span>
-                  <button mat-icon-button color="warn" (click)="deleteTag(tag)" class="delete-btn">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </mat-list-item>
-              }
-            </mat-list>
+          <mat-list>
+            @for (tag of tags(); track tag.id) {
+            <mat-list-item class="list-item">
+              <span class="item-name">{{ tag.name }}</span>
+              <button mat-icon-button color="warn" (click)="deleteTag(tag)" class="delete-btn">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-list-item>
+            }
+          </mat-list>
           }
         </div>
       </mat-card-content>

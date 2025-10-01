@@ -34,21 +34,21 @@
       <p><strong>Chart Data Days:</strong> {{ chartData().length }}</p>
       <p><strong>Current Period:</strong> {{ currentPeriod }}</p>
       @if (chartData().length > 0) {
-        <div>
-          <p><strong>Sample Data:</strong></p>
-          <pre>{{ chartData() | json }}</pre>
-        </div>
+      <div>
+        <p><strong>Sample Data:</strong></p>
+        <pre>{{ chartData() | json }}</pre>
+      </div>
       }
     </div>
 
     @if (loading()) {
-      <div class="loading">
-        <p>Loading chart data...</p>
-      </div>
+    <div class="loading">
+      <p>Loading chart data...</p>
+    </div>
     } @else if (chartData().length === 0) {
-      <div class="no-data">
-        <p>No data available for the selected period.</p>
-      </div>
+    <div class="no-data">
+      <p>No data available for the selected period.</p>
+    </div>
     }
   </mat-card-content>
 </mat-card>

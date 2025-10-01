@@ -31,7 +31,11 @@
     <!-- Subcategory Selection -->
     <mat-form-field appearance="outline">
       <mat-label>Subcategory</mat-label>
-      <mat-select [value]="subcategoryId()" (valueChange)="subcategoryId.set($event)" [disabled]="!categoryId()">
+      <mat-select
+        [value]="subcategoryId()"
+        (valueChange)="subcategoryId.set($event)"
+        [disabled]="!categoryId()"
+      >
         <mat-option [value]="null">(none)</mat-option>
         @for (subcategory of subcategories(); track subcategory.id) {
         <mat-option [value]="subcategory.id">

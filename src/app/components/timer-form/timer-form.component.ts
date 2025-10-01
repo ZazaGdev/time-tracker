@@ -100,9 +100,7 @@ export class TimerFormComponent implements OnInit {
     const categoryId = this.categoryId();
     if (categoryId) {
       try {
-        const subcategories = await this.taxonomyService.getSubcategoriesForCategory(
-          categoryId
-        );
+        const subcategories = await this.taxonomyService.getSubcategoriesForCategory(categoryId);
         this.subcategories.set(subcategories);
       } catch (error) {
         console.error('Error loading subcategories:', error);
@@ -168,6 +166,4 @@ export class TimerFormComponent implements OnInit {
       alert('Failed to stop timer. Please try again.');
     }
   }
-
-
 }

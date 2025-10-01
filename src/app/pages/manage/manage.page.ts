@@ -1,5 +1,12 @@
 // Angular Core
-import { Component, OnInit, signal, ElementRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  signal,
+  ElementRef,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 // Angular Common
 import { CommonModule } from '@angular/common';
