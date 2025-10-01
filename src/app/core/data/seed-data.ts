@@ -29,7 +29,7 @@ export async function seedSampleData(): Promise<void> {
     ]);
 
     // Add sample tags
-    await db.tags.bulkAdd([
+    const tagIds = await db.tags.bulkAdd([
       { name: 'Angular' },
       { name: 'TypeScript' },
       { name: 'Frontend' },
@@ -40,7 +40,93 @@ export async function seedSampleData(): Promise<void> {
       { name: 'Feature' },
     ]);
 
-    console.log('Sample data seeded successfully');
+    // Add sample sessions for the past week to demonstrate chart functionality
+    const now = new Date();
+    const sampleSessions = [];
+
+    // Create sessions for the past 7 days
+    for (let i = 6; i >= 0; i--) {
+      const sessionDate = new Date(now);
+      sessionDate.setDate(sessionDate.getDate() - i);
+
+      // Morning work session (Development)
+      const morningStart = new Date(sessionDate);
+      morningStart.setHours(9, 0, 0, 0);
+      const morningEnd = new Date(morningStart);
+      morningEnd.setHours(11, 30, 0, 0);
+
+      sampleSessions.push({
+        name: `Development Session - Day ${7 - i}`,
+        categoryId: workCategoryId as number,
+        subcategoryId: undefined,
+        tagIds: [1, 2], // Angular, TypeScript
+        startedAt: morningStart.toISOString(),
+        endedAt: morningEnd.toISOString(),
+        durationMs: morningEnd.getTime() - morningStart.getTime(),
+        notes: `Sample development work for ${sessionDate.toDateString()}`,
+      });
+
+      // Afternoon work session (Meetings) - only on weekdays
+      if (sessionDate.getDay() >= 1 && sessionDate.getDay() <= 5) {
+        const afternoonStart = new Date(sessionDate);
+        afternoonStart.setHours(14, 0, 0, 0);
+        const afternoonEnd = new Date(afternoonStart);
+        afternoonEnd.setHours(15, 0, 0, 0);
+
+        sampleSessions.push({
+          name: `Team Meeting - Day ${7 - i}`,
+          categoryId: workCategoryId as number,
+          subcategoryId: undefined,
+          tagIds: [6], // Planning
+          startedAt: afternoonStart.toISOString(),
+          endedAt: afternoonEnd.toISOString(),
+          durationMs: afternoonEnd.getTime() - afternoonStart.getTime(),
+          notes: `Daily standup meeting`,
+        });
+      }
+
+      // Evening learning session - every other day
+      if (i % 2 === 0) {
+        const eveningStart = new Date(sessionDate);
+        eveningStart.setHours(19, 0, 0, 0);
+        const eveningEnd = new Date(eveningStart);
+        eveningEnd.setHours(20, 30, 0, 0);
+
+        sampleSessions.push({
+          name: `Learning Session - Day ${7 - i}`,
+          categoryId: learningCategoryId as number,
+          subcategoryId: undefined,
+          tagIds: [5], // Research
+          startedAt: eveningStart.toISOString(),
+          endedAt: eveningEnd.toISOString(),
+          durationMs: eveningEnd.getTime() - eveningStart.getTime(),
+          notes: `Self-study and skill development`,
+        });
+      }
+
+      // Personal activities on weekends
+      if (sessionDate.getDay() === 0 || sessionDate.getDay() === 6) {
+        const personalStart = new Date(sessionDate);
+        personalStart.setHours(10, 0, 0, 0);
+        const personalEnd = new Date(personalStart);
+        personalEnd.setHours(11, 0, 0, 0);
+
+        sampleSessions.push({
+          name: `Weekend Activity - Day ${7 - i}`,
+          categoryId: personalCategoryId as number,
+          subcategoryId: undefined,
+          tagIds: [],
+          startedAt: personalStart.toISOString(),
+          endedAt: personalEnd.toISOString(),
+          durationMs: personalEnd.getTime() - personalStart.getTime(),
+          notes: `Weekend personal time`,
+        });
+      }
+    }
+
+    await db.sessions.bulkAdd(sampleSessions);
+
+    console.log('Sample data seeded successfully with', sampleSessions.length, 'sample sessions');
   } catch (error) {
     console.error('Error seeding sample data:', error);
   }

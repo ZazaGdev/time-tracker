@@ -337,6 +337,7 @@ export class ReportService {
    */
   async getStackedChartData(dateRange: DateRangeFilter): Promise<StackedChartData[]> {
     const { startDate, endDate } = dateRange;
+    console.log('🗄️ Fetching stacked chart data for range:', startDate, 'to', endDate);
 
     // Get all sessions in the date range
     const startDateISO = startOfDay(startDate).toISOString();
@@ -346,6 +347,8 @@ export class ReportService {
       .where('startedAt')
       .between(startDateISO, endDateISO, true, true)
       .toArray();
+
+    console.log('📊 Found sessions in date range:', sessions.length, sessions);
 
     // Get all days in the range
     const daysInRange = eachDayOfInterval({ start: startDate, end: endDate });
@@ -394,6 +397,8 @@ export class ReportService {
       });
     }
 
-    return result.sort((a, b) => a.date.localeCompare(b.date));
+    const sortedResult = result.sort((a, b) => a.date.localeCompare(b.date));
+    console.log('📈 Returning stacked chart data:', sortedResult.length, 'days', sortedResult);
+    return sortedResult;
   }
 }

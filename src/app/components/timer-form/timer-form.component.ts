@@ -1,5 +1,5 @@
 // Angular Core
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 
 // Angular Common
 import { CommonModule } from '@angular/common';
@@ -37,6 +37,7 @@ import { seedSampleData } from '../../core/data';
   ],
   templateUrl: './timer-form.component.html',
   styleUrls: ['./timer-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimerFormComponent implements OnInit {
   // State signals
@@ -44,10 +45,25 @@ export class TimerFormComponent implements OnInit {
   subcategories = signal<Subcategory[]>([]);
   tags = signal<Tag[]>([]);
 
-  // Form state
-  categoryId: number | null = null;
-  subcategoryId: number | null = null;
-  selectedTagIds: number[] = [];
+  // Form state signals
+  categoryId = signal<number | null>(null);
+  subcategoryId = signal<number | null>(null);
+  selectedTagIds = signal<number[]>([]);
+
+  // Computed properties
+  canStart = computed(() => {
+    // Can start only if a category is selected and categories have been loaded
+    return this.categoryId() !== null && this.categories().length > 0;
+  });
+
+  canStop = computed(() => {
+    return !!this.timerService.active();
+  });
+
+  startButtonText = computed(() => {
+    const activeTimer = this.timerService.active();
+    return activeTimer ? 'Start New Timer' : 'Start Timer';
+  });
 
   constructor(
     public timerService: TimerService,
@@ -79,12 +95,13 @@ export class TimerFormComponent implements OnInit {
 
   async onCategoryChange(): Promise<void> {
     // Reset subcategory when category changes
-    this.subcategoryId = null;
+    this.subcategoryId.set(null);
 
-    if (this.categoryId) {
+    const categoryId = this.categoryId();
+    if (categoryId) {
       try {
         const subcategories = await this.taxonomyService.getSubcategoriesForCategory(
-          this.categoryId
+          categoryId
         );
         this.subcategories.set(subcategories);
       } catch (error) {
@@ -98,7 +115,8 @@ export class TimerFormComponent implements OnInit {
 
   async startTimer(): Promise<void> {
     // Validate category selection
-    if (!this.categoryId) {
+    const categoryId = this.categoryId();
+    if (!categoryId) {
       alert('Please select a category before starting the timer.');
       return;
     }
@@ -117,9 +135,9 @@ export class TimerFormComponent implements OnInit {
 
       // Start the new timer (TimerService.startTimer already handles stopping existing timer)
       await this.timerService.startTimer({
-        categoryId: this.categoryId,
-        subcategoryId: this.subcategoryId || undefined,
-        tagIds: [...this.selectedTagIds],
+        categoryId,
+        subcategoryId: this.subcategoryId() || undefined,
+        tagIds: [...this.selectedTagIds()],
       });
 
       console.log('Timer started successfully');
@@ -151,19 +169,5 @@ export class TimerFormComponent implements OnInit {
     }
   }
 
-  get canStart(): boolean {
-    // Can start only if:
-    // 1. A category is selected (required)
-    // 2. Categories have been loaded
-    return this.categoryId !== null && this.categories().length > 0;
-  }
 
-  get canStop(): boolean {
-    return !!this.timerService.active();
-  }
-
-  get startButtonText(): string {
-    const activeTimer = this.timerService.active();
-    return activeTimer ? 'Start New Timer' : 'Start Timer';
-  }
 }

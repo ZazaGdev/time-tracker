@@ -1,5 +1,13 @@
 // Angular Core
-import { Component, OnInit, signal, computed, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  signal,
+  computed,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 // Angular Common
 import { CommonModule } from '@angular/common';
@@ -53,10 +61,14 @@ interface ReportRow {
   ],
   templateUrl: './reports.page.html',
   styleUrls: ['./reports.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReportsPage implements OnInit {
+export class ReportsPage implements OnInit, AfterViewInit {
   @ViewChild('hoursChart', { static: false }) hoursChart!: HoursChartComponent;
   // @ViewChild('pieChart', { static: false }) pieChart!: CategoryPieChartComponent; // Temporarily disabled
+
+  // Debounce timer for updates
+  private updateTimer: any = null;
 
   // Current selected date
   selectedDate = signal<string>('');
@@ -135,6 +147,15 @@ export class ReportsPage implements OnInit {
     await this.loadReportData();
   }
 
+  ngAfterViewInit(): void {
+    // Initialize chart with current period and date after view is ready
+    setTimeout(async () => {
+      if (this.hoursChart) {
+        await this.hoursChart.updatePeriod(this.selectedPeriod(), this.selectedDateObj());
+      }
+    }, 200);
+  }
+
   /**
    * Load all taxonomy data (categories, subcategories, tags)
    */
@@ -177,6 +198,41 @@ export class ReportsPage implements OnInit {
   }
 
   /**
+   * Update report data for new selection without full reload
+   */
+  private async updateReportDataForNewSelection(): Promise<void> {
+    if (!this.selectedDate()) {
+      return;
+    }
+
+    try {
+      // Parse the date string to a Date object
+      const dateObj = new Date(this.selectedDate() + 'T00:00:00');
+      const period = this.selectedPeriod();
+
+      // Get totals based on period
+      let totals: PeriodTotals[];
+      switch (period) {
+        case 'daily':
+          totals = await this.reportService.totalsForDate(dateObj);
+          break;
+        case 'weekly':
+          totals = await this.reportService.totalsForWeek(dateObj);
+          break;
+        case 'monthly':
+          totals = await this.reportService.totalsForMonth(dateObj);
+          break;
+      }
+
+      // Only update the periodTotals signal - computed signals will update the UI automatically
+      this.periodTotals.set(totals);
+    } catch (error) {
+      console.error('Error updating report data:', error);
+      this.periodTotals.set([]);
+    }
+  }
+
+  /**
    * Load report data for the selected date and period
    */
   async loadReportData(): Promise<void> {
@@ -207,14 +263,8 @@ export class ReportsPage implements OnInit {
 
       this.periodTotals.set(totals);
 
-      // Refresh chart components if available
-      if (this.hoursChart) {
-        await this.hoursChart.refresh();
-      }
-      // Pie chart temporarily disabled during migration
-      // if (this.pieChart) {
-      //   await this.pieChart.refresh();
-      // }
+      // Chart will update automatically via its own data loading
+      // No need to refresh here to prevent double loading and flickering
     } catch (error) {
       console.error('Error loading report data:', error);
       this.periodTotals.set([]);
@@ -230,17 +280,25 @@ export class ReportsPage implements OnInit {
     const target = event.target as HTMLInputElement;
     this.selectedDate.set(target.value);
 
-    // Refresh chart component (it manages its own date range now)
-    if (this.hoursChart) {
-      await this.hoursChart.refresh();
+    // Debounce updates to prevent rapid successive calls
+    if (this.updateTimer) {
+      clearTimeout(this.updateTimer);
     }
-    // Pie chart temporarily disabled during migration
-    // if (this.pieChart) {
-    //   this.pieChart.date = this.selectedDateObj();
-    //   await this.pieChart.refresh();
-    // }
 
-    await this.loadReportData();
+    this.updateTimer = setTimeout(async () => {
+      // Update chart component with new date and current period
+      if (this.hoursChart) {
+        await this.hoursChart.updatePeriod(this.selectedPeriod(), this.selectedDateObj());
+      }
+      // Pie chart temporarily disabled during migration
+      // if (this.pieChart) {
+      //   this.pieChart.date = this.selectedDateObj();
+      //   await this.pieChart.refresh();
+      // }
+
+      // No need to call loadReportData() - computed signals will update automatically
+      await this.updateReportDataForNewSelection();
+    }, 150); // 150ms debounce
   }
 
   /**
@@ -249,19 +307,27 @@ export class ReportsPage implements OnInit {
   async onPeriodChange(period: ReportPeriod): Promise<void> {
     this.selectedPeriod.set(period);
 
-    // Refresh chart component (it manages its own period now)
-    if (this.hoursChart) {
-      await this.hoursChart.refresh();
+    // Debounce updates to prevent rapid successive calls
+    if (this.updateTimer) {
+      clearTimeout(this.updateTimer);
     }
 
-    // Pie chart temporarily disabled during migration
-    // if (this.pieChart) {
-    //   this.pieChart.period = period;
-    //   this.pieChart.date = this.selectedDateObj();
-    //   await this.pieChart.refresh();
-    // }
+    this.updateTimer = setTimeout(async () => {
+      // Update chart component with new period and date
+      if (this.hoursChart) {
+        await this.hoursChart.updatePeriod(period, this.selectedDateObj());
+      }
 
-    await this.loadReportData();
+      // Pie chart temporarily disabled during migration
+      // if (this.pieChart) {
+      //   this.pieChart.period = period;
+      //   this.pieChart.date = this.selectedDateObj();
+      //   await this.pieChart.refresh();
+      // }
+
+      // No need to call loadReportData() - computed signals will update automatically
+      await this.updateReportDataForNewSelection();
+    }, 100); // Shorter debounce for period changes as they're less frequent
   }
   /**
    * Get total hours for all entries

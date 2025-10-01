@@ -1,5 +1,5 @@
 // Angular Core
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 
 // Angular Router
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
@@ -14,6 +14,9 @@ import { MatIconModule } from '@angular/material/icon';
 
 // Custom Components
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+
+// Data Services
+import { seedSampleData } from './core/data/seed-data';
 
 @Component({
   selector: 'app-root',
@@ -35,9 +38,22 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   title = signal('Trackie');
 
-  constructor() {}
+  constructor() {
+    // Initialize sample data on app start
+    this.initializeData();
+  }
+
+  private async initializeData(): Promise<void> {
+    try {
+      await seedSampleData();
+      console.log('✅ Sample data initialized successfully');
+    } catch (error) {
+      console.error('❌ Error initializing sample data:', error);
+    }
+  }
 }

@@ -1,5 +1,5 @@
 // Angular Core
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 
 // Angular Common
 import { CommonModule } from '@angular/common';
@@ -35,6 +35,7 @@ interface NavigationItem {
   ],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarComponent {
   isExpanded = signal<boolean>(false);

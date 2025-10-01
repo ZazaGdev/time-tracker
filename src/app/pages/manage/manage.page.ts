@@ -1,5 +1,5 @@
 // Angular Core
-import { Component, OnInit, signal, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, signal, ElementRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
 // Angular Common
 import { CommonModule } from '@angular/common';
@@ -44,6 +44,7 @@ import { Category, Subcategory, Tag, Session, ActiveTimer } from '../../core/mod
   ],
   templateUrl: './manage.page.html',
   styleUrls: ['./manage.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManagePage implements OnInit {
   // Data signals

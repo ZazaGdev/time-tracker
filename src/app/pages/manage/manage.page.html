@@ -100,8 +100,11 @@
               (click)="seedSixMonthDemoData()"
               [disabled]="isSeedingDemo()"
             >
-              <mat-icon *ngIf="!isSeedingDemo()">calendar_view_month</mat-icon>
-              <mat-spinner *ngIf="isSeedingDemo()" diameter="20"></mat-spinner>
+              @if (!isSeedingDemo()) {
+                <mat-icon>calendar_view_month</mat-icon>
+              } @else {
+                <mat-spinner diameter="20"></mat-spinner>
+              }
               {{ isSeedingDemo() ? 'Seeding...' : '6-Month Comprehensive' }}
             </button>
 
@@ -112,8 +115,11 @@
               [disabled]="isSeedingDemo()"
               class="clear-data-btn"
             >
-              <mat-icon *ngIf="!isSeedingDemo()">delete_forever</mat-icon>
-              <mat-spinner *ngIf="isSeedingDemo()" diameter="20"></mat-spinner>
+              @if (!isSeedingDemo()) {
+                <mat-icon>delete_forever</mat-icon>
+              } @else {
+                <mat-spinner diameter="20"></mat-spinner>
+              }
               {{ isSeedingDemo() ? 'Clearing...' : 'Clear All Data' }}
             </button>
           </div>

@@ -1,17 +1,18 @@
 // Angular Core
-import { Component, OnInit, signal, ViewChild, effect } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  signal,
+  ViewChild,
+  effect,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 // Angular Common
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 
 // Angular Material
 import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatNativeDateModule } from '@angular/material/core';
 
 // Third-party Libraries
 import { NgApexchartsModule, ChartComponent } from 'ng-apexcharts';
@@ -60,21 +61,16 @@ export interface ChartOptions {
   imports: [
     // Angular Common
     CommonModule,
-    FormsModule,
 
     // Angular Material
     MatCardModule,
-    MatButtonModule,
-    MatDatepickerModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatNativeDateModule,
 
     // Third-party
     NgApexchartsModule,
   ],
   templateUrl: './hours-chart.component.html',
   styleUrls: ['./hours-chart.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HoursChartComponent implements OnInit {
   @ViewChild('chart', { static: false }) chart: ChartComponent | undefined;
@@ -84,6 +80,10 @@ export class HoursChartComponent implements OnInit {
   endDate: Date = new Date();
   chartData = signal<StackedChartData[]>([]);
   loading = signal<boolean>(false);
+
+  // Current period for coordination with parent
+  currentPeriod: 'daily' | 'weekly' | 'monthly' = 'weekly';
+  currentDate: Date = new Date();
 
   // Chart configuration
   chartOptions: ChartOptions = {
@@ -170,50 +170,26 @@ export class HoursChartComponent implements OnInit {
   };
 
   constructor(private reportService: ReportService, private taxonomyService: TaxonomyService) {
-    // Set default date range to this week
-    this.setQuickRange('thisWeek');
+    // Set default date range to this week and period
+    this.currentPeriod = 'weekly';
+    this.currentDate = new Date();
+    const today = new Date();
+    this.startDate = startOfWeek(today, { weekStartsOn: 1 }); // Monday
+    this.endDate = endOfWeek(today, { weekStartsOn: 1 });
   }
 
   ngOnInit(): void {
-    this.loadChartData();
-  }
-
-  setQuickRange(range: string): void {
-    const today = new Date();
-
-    switch (range) {
-      case 'thisWeek':
-        this.startDate = startOfWeek(today, { weekStartsOn: 1 }); // Monday
-        this.endDate = endOfWeek(today, { weekStartsOn: 1 });
-        break;
-      case 'lastWeek':
-        const lastWeek = subWeeks(today, 1);
-        this.startDate = startOfWeek(lastWeek, { weekStartsOn: 1 });
-        this.endDate = endOfWeek(lastWeek, { weekStartsOn: 1 });
-        break;
-      case 'last2weeks':
-        this.startDate = startOfWeek(subWeeks(today, 1), { weekStartsOn: 1 });
-        this.endDate = endOfWeek(today, { weekStartsOn: 1 });
-        break;
-      case 'lastMonth':
-        this.startDate = subWeeks(today, 4);
-        this.endDate = today;
-        break;
-    }
-
-    this.onDateRangeChange();
-  }
-
-  onDateRangeChange(): void {
-    if (this.startDate && this.endDate && this.startDate <= this.endDate) {
+    // Use setTimeout to ensure the chart is initialized after view
+    setTimeout(() => {
       this.loadChartData();
-    }
+    }, 100);
   }
 
   async loadChartData(): Promise<void> {
     if (!this.startDate || !this.endDate) return;
 
     this.loading.set(true);
+    console.log('🔄 Loading chart data for range:', this.startDate, 'to', this.endDate);
 
     try {
       // Get stacked chart data from service
@@ -223,9 +199,11 @@ export class HoursChartComponent implements OnInit {
       };
 
       const rawChartData = await this.reportService.getStackedChartData(dateRange);
+      console.log('📊 Raw chart data received:', rawChartData.length, 'days', rawChartData);
 
       // Get categories to resolve names and colors
       const categories = await this.taxonomyService.getCategories();
+      console.log('🏷️ Categories loaded:', categories.length, categories);
 
       // Resolve category names in the data
       const resolvedData: StackedChartData[] = rawChartData.map((dayData) => ({
@@ -236,6 +214,7 @@ export class HoursChartComponent implements OnInit {
         })),
       }));
 
+      console.log('✅ Resolved chart data:', resolvedData);
       this.chartData.set(resolvedData);
       this.updateChart(resolvedData, categories);
     } catch (error) {
@@ -248,15 +227,20 @@ export class HoursChartComponent implements OnInit {
   }
 
   private updateChart(data: StackedChartData[], categories: Category[]): void {
+    console.log('📈 Updating chart with data:', data.length, 'days');
+
     if (data.length === 0) {
-      this.chartOptions = {
-        ...this.chartOptions,
-        series: [],
-        xaxis: {
-          ...this.chartOptions.xaxis,
-          categories: [],
-        },
-      };
+      console.log('⚠️ No data to display in chart');
+      // Use updateOptions to prevent chart recreation
+      if (this.chart) {
+        this.chart.updateOptions(
+          {
+            series: [],
+            xaxis: { categories: [] },
+          },
+          false
+        );
+      }
       return;
     }
 
@@ -267,6 +251,7 @@ export class HoursChartComponent implements OnInit {
         allCategories.add(cat.categoryId);
       });
     });
+    console.log('🏷️ Found categories in data:', Array.from(allCategories));
 
     // Create series for each category
     const series: ApexAxisChartSeries = Array.from(allCategories).map((categoryId) => {
@@ -278,26 +263,112 @@ export class HoursChartComponent implements OnInit {
         return categoryData ? categoryData.hours : 0;
       });
 
+      console.log(`📊 Series for ${categoryName}:`, seriesData);
+
       return {
         name: categoryName,
         data: seriesData,
       };
     });
 
-    // Update chart options
-    this.chartOptions = {
-      ...this.chartOptions,
-      series,
-      xaxis: {
-        ...this.chartOptions.xaxis,
-        categories: data.map((dayData) => format(new Date(dayData.date), 'MMM dd')),
-      },
-    };
+    // Format dates properly for X-axis
+    const formattedCategories = data.map((dayData) => {
+      const date = new Date(dayData.date);
+      const dayName = format(date, 'EEE'); // Mon, Tue, Wed
+      const dateStr = format(date, 'MM/dd'); // 01/09
+      return `${dayName} ${dateStr}`;
+    });
+    console.log('📅 X-axis categories:', formattedCategories);
+
+    // Use updateOptions to prevent flickering
+    console.log(
+      '🎯 Updating chart with series:',
+      series.length,
+      'series and',
+      formattedCategories.length,
+      'categories'
+    );
+
+    if (this.chart) {
+      this.chart.updateOptions(
+        {
+          series,
+          xaxis: {
+            categories: formattedCategories,
+            title: { text: 'Date' },
+            labels: {
+              rotate: -45,
+              style: {
+                fontSize: '12px',
+              },
+            },
+          },
+        },
+        false
+      );
+      console.log('✅ Chart updated successfully');
+    } else {
+      // Fallback for initial load
+      console.log('📊 Setting initial chart options');
+      this.chartOptions = {
+        ...this.chartOptions,
+        series,
+        xaxis: {
+          ...this.chartOptions.xaxis,
+          categories: formattedCategories,
+        },
+      };
+    }
   }
 
   // Public method to refresh data (can be called from parent components)
   async refresh(): Promise<void> {
     await this.loadChartData();
+  }
+
+  // Public method to update period and date from parent
+  async updatePeriod(period: 'daily' | 'weekly' | 'monthly', date: Date): Promise<void> {
+    // Check if the period and date are actually different to avoid unnecessary updates
+    const newStartDate = this.calculateStartDate(period, date);
+    const newEndDate = this.calculateEndDate(period, date);
+
+    if (
+      this.currentPeriod === period &&
+      this.startDate.getTime() === newStartDate.getTime() &&
+      this.endDate.getTime() === newEndDate.getTime()
+    ) {
+      // No change needed
+      return;
+    }
+
+    this.currentPeriod = period;
+    this.currentDate = date;
+    this.startDate = newStartDate;
+    this.endDate = newEndDate;
+
+    await this.loadChartData();
+  }
+
+  private calculateStartDate(period: 'daily' | 'weekly' | 'monthly', date: Date): Date {
+    switch (period) {
+      case 'daily':
+        return new Date(date);
+      case 'weekly':
+        return startOfWeek(date, { weekStartsOn: 1 }); // Monday
+      case 'monthly':
+        return new Date(date.getFullYear(), date.getMonth(), 1);
+    }
+  }
+
+  private calculateEndDate(period: 'daily' | 'weekly' | 'monthly', date: Date): Date {
+    switch (period) {
+      case 'daily':
+        return new Date(date);
+      case 'weekly':
+        return endOfWeek(date, { weekStartsOn: 1 });
+      case 'monthly':
+        return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    }
   }
 
   // Get light mode colors
